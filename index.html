@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PromptBattle ⚡ — ৩০ মিনিটের Micro-Design Challenge</title>
+<meta name="description" content="২৫ জন, ৩০ মিনিট, $2–$10 এন্ট্রি। সেরা Thumbnail, Logo ও AI Prompt ব্যাটলে জিতুন প্রাইজ মানি।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080812; --bg2:#0e0e1e; --card:#141428; --card2:#1b1b34;
+  --line:rgba(255,255,255,.09);
+  --txt:#f2f2fa; --mut:#a5a5c0;
+  --y:#ffd60a; --p:#8b5cf6; --c:#22d3ee; --g:#22c55e; --r:#ef4444; --o:#fb923c;
+  --rad:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Hind Siliguri',system-ui,sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 400px at 15% -5%,rgba(139,92,246,.25),transparent),radial-gradient(700px 400px at 90% 10%,rgba(34,211,238,.16),transparent),radial-gradient(600px 500px at 50% 110%,rgba(255,214,10,.08),transparent);pointer-events:none;z-index:0}
+h1,h2,h3,.gro{font-family:'Space Grotesk','Hind Siliguri',sans-serif}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+/* NAV */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(8,8,18,.82);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}
+.logo-b{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--y),var(--o));display:grid;place-items:center;font-size:20px;box-shadow:0 4px 20px rgba(255,214,10,.4)}
+.logo span em{font-style:normal;color:var(--y)}
+.nav-links{display:flex;gap:22px;color:var(--mut);font-size:15px}
+.nav-links a:hover{color:#fff}
+.btn{border:0;cursor:pointer;font-family:inherit;font-weight:700;border-radius:12px;padding:12px 22px;font-size:15px;transition:.18s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-y{background:linear-gradient(135deg,#ffd60a,#ff9f1c);color:#111;box-shadow:0 6px 24px rgba(255,180,0,.35)}
+.btn-y:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,180,0,.5)}
+.btn-ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.13)}
+.btn-p{background:linear-gradient(135deg,#8b5cf6,#22d3ee);color:#fff}
+.btn-sm{padding:9px 16px;font-size:13.5px;border-radius:10px}
+.wallet{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid var(--line);padding:8px 8px 8px 14px;border-radius:12px;font-size:14px}
+/* HERO */
+.hero{padding:64px 0 30px;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:#4ade80;font-size:13px;font-weight:600;padding:7px 14px;border-radius:100px;margin-bottom:18px}
+.pulse{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pl 1.6s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(74,222,128,.6)}70%{box-shadow:0 0 0 9px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.12;letter-spacing:-1px}
+.hero h1 .hl{background:linear-gradient(90deg,#ffd60a,#fb923c,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);font-size:17px;margin:16px 0 24px;line-height:1.7}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:26px;margin-top:28px;flex-wrap:wrap}
+.stat b{font-size:24px;font-family:'Space Grotesk';display:block}
+.stat small{color:var(--mut)}
+/* arena card */
+.arena-card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.arena-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.live-tag{background:var(--r);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;display:flex;gap:6px;align-items:center}
+.timer{font-family:'Space Grotesk';font-size:34px;font-weight:700;letter-spacing:2px}
+.timer small{font-size:13px;color:var(--mut);letter-spacing:0}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:14px 0}
+.player{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.player .av{font-size:30px}
+.player b{display:block;font-size:14px;margin-top:4px}
+.player small{color:var(--mut);font-size:12px}
+.vs-x{font-weight:700;color:var(--y);font-size:20px}
+.progress{height:10px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden;margin:8px 0 4px}
+.progress i{display:block;height:100%;width:68%;background:linear-gradient(90deg,var(--p),var(--c));border-radius:100px}
+.seats{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+/* ticker */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);overflow:hidden;white-space:nowrap;padding:12px 0;margin:26px 0 0;font-size:14px;color:var(--mut)}
+.ticker span{margin:0 26px}
+.ticker b{color:var(--y)}
+/* sections */
+section{padding:56px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 34px}
+.sec-head .kicker{color:var(--y);font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase}
+.sec-head h2{font-size:clamp(26px,3.6vw,38px);margin:8px 0 10px;letter-spacing:-.5px}
+.sec-head p{color:var(--mut)}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:26px;position:relative;overflow:hidden}
+.step::after{content:attr(data-n);position:absolute;top:6px;right:14px;font-family:'Space Grotesk';font-size:64px;font-weight:700;color:rgba(255,255,255,.05)}
+.step .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px;margin-bottom:14px}
+.step h3{margin-bottom:8px;font-size:19px}
+.step p{color:var(--mut);font-size:14.5px;line-height:1.7}
+/* battles */
+.filter{display:flex;gap:10px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.chip{padding:9px 18px;border-radius:100px;background:rgba(255,255,255,.06);border:1px solid var(--line);cursor:pointer;font-family:inherit;color:var(--mut);font-size:14px;font-weight:600}
+.chip.on{background:var(--y);color:#111;border-color:var(--y)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.bcard{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden;transition:.2s}
+.bcard:hover{transform:translateY(-4px);border-color:rgba(255,214,10,.4)}
+.bthumb{height:150px;display:grid;place-items:center;font-size:52px;position:relative;overflow:hidden}
+.bthumb .tag{position:absolute;top:12px;left:12px;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:100px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px)}
+.bthumb .fee{position:absolute;top:12px;right:12px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:100px;background:var(--y);color:#111}
+.bbody{padding:18px}
+.bbody h3{font-size:17px;margin-bottom:6px}
+.bbody .meta{color:var(--mut);font-size:13px;margin-bottom:12px}
+.pot{display:flex;justify-content:space-between;align-items:center;background:rgba(255,214,10,.08);border:1px dashed rgba(255,214,10,.35);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:14px}
+.pot b{color:var(--y);font-family:'Space Grotesk';font-size:18px}
+/* playground */
+.play{background:linear-gradient(180deg,#10102a,#0b0b1a);border:1px solid var(--line);border-radius:24px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.play h3{font-size:20px;margin-bottom:6px}
+.play .sub{color:var(--mut);font-size:14px;margin-bottom:16px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--mut);margin-bottom:6px;font-weight:600}
+.field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;color:#fff;padding:12px 14px;font-family:inherit;font-size:14px;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--p)}
+.entries{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow:auto;padding-right:4px}
+.entry{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center}
+.entry .thumb{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;font-size:26px;flex-shrink:0}
+.entry .inf{flex:1;min-width:0}
+.entry .inf b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry .inf small{color:var(--mut);font-size:12px}
+.vote-btn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px}
+.vote-btn:hover{border-color:var(--y)}
+.vote-btn.voted{background:var(--y);color:#111;border-color:var(--y)}
+/* calculator */
+.calc{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+input[type=range]{width:100%;accent-color:var(--y);height:30px}
+.calc-vals{display:flex;gap:14px;margin:18px 0}
+.calc-vals div{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.calc-vals b{font-family:'Space Grotesk';font-size:22px;display:block}
+.calc-vals small{color:var(--mut);font-size:12px}
+.prize-bar{display:flex;height:44px;border-radius:12px;overflow:hidden;font-size:12px;font-weight:700;margin-top:10px}
+.prize-bar div{display:grid;place-items:center}
+/* winners */
+.wtable{width:100%;border-collapse:collapse;background:var(--card);border-radius:18px;overflow:hidden;border:1px solid var(--line)}
+.wtable th,.wtable td{padding:14px 16px;text-align:left;font-size:14px;border-bottom:1px solid var(--line)}
+.wtable th{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.medal{font-size:20px}
+/* faq */
+.faq{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;cursor:pointer}
+.faq summary{font-weight:700;cursor:pointer}
+.faq p{color:var(--mut);font-size:14.5px;margin-top:8px;line-height:1.7}
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:none;place-items:center;z-index:100;padding:18px}
+.modal-bg.show{display:grid}
+.modal{background:var(--card2);border:1px solid var(--line);border-radius:22px;max-width:440px;width:100%;padding:28px;animation:pop .25s}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.modal h3{font-size:22px;margin-bottom:6px}
+.modal .m-sub{color:var(--mut);font-size:14px;margin-bottom:18px}
+.pay-opt{display:flex;gap:10px;margin:14px 0}
+.pay-opt button{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-family:inherit;font-weight:700}
+.pay-opt button.on{border-color:var(--y);background:rgba(255,214,10,.12)}
+/* toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#11112a;border:1px solid var(--y);padding:13px 22px;border-radius:14px;font-weight:600;z-index:200;transition:.3s;opacity:0;max-width:90vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mut);font-size:14px;text-align:center;margin-top:20px}
+@media(max-width:920px){
+  .hero,.play,.calc{grid-template-columns:1fr}
+  .steps,.grid3{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hero{padding-top:40px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <div class="logo"><div class="logo-b">⚡</div><span>Prompt<em>Battle</em></span></div>
+    <div class="nav-links">
+      <a href="#how">কীভাবে কাজ করে</a>
+      <a href="#battles">লাইভ ব্যাটল</a>
+      <a href="#arena">এরিনা</a>
+      <a href="#prize">প্রাইজ</a>
+      <a href="#winners">উইনার্স</a>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="wallet">💰 <b id="balance">$25.00</b></div>
+      <button class="btn btn-y btn-sm" onclick="openJoin('featured')">+ Join Battle</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="badge"><span class="pulse"></span> এখন লাইভ: Thumbnail Showdown — 17/25 সিট ফিল্ড</div>
+      <h1>২৫ জন। ৩০ মিনিট।<br><span class="hl">সেরা ডিজাইন জিতবে ক্যাশ।</span></h1>
+      <p>$2–$10 এন্ট্রি দিয়ে ঢুকুন Micro-Design ব্যাটলে — Thumbnail, Logo বা Best AI Prompt। অংশগ্রহণকারী + কমিউনিটি ভোটে <b style="color:#fff">সেরা ৩ জন</b> ভাগ করে নেবে পুরো প্রাইজ পট।</p>
+      <div class="hero-cta">
+        <button class="btn btn-y" onclick="document.getElementById('battles').scrollIntoView({behavior:'smooth'})">⚔️ ব্যাটলে ঢুকুন</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('arena').scrollIntoView({behavior:'smooth'})">▶️ ডেমো এরিনা দেখুন</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>$12,480</b><small>এ পর্যন্ত পেআউট</small></div>
+        <div class="stat"><b>3,240</b><small>ব্যাটলার</small></div>
+        <div class="stat"><b>412</b><small>ব্যাটল সম্পন্ন</small></div>
+        <div class="stat"><b>~4.9★</b><small>কমিউনিটি রেটিং</small></div>
+      </div>
+    </div>
+    <div class="arena-card">
+      <div class="arena-top">
+        <span class="live-tag">🔴 LIVE</span>
+        <span style="font-size:13px;color:var(--mut)">Battle #412 • Thumbnail</span>
+      </div>
+      <div style="text-align:center">
+        <div class="timer"><span id="heroTimer">18:42</span> <small>বাকি</small></div>
+        <div class="progress"><i id="heroProg"></i></div>
+        <div class="seats"><span>⏱️ ৩০ মিনিট চ্যালেঞ্জ</span><span>👥 17/25 joined</span></div>
+      </div>
+      <div class="vs">
+        <div class="player"><div class="av">🎨</div><b>@rafi_designs</b><small>❤️ 48 votes</small></div>
+        <div class="vs-x">VS</div>
+        <div class="player"><div class="av">🤖</div><b>@prompt_queen</b><small>❤️ 51 votes</small></div>
+      </div>
+      <div class="pot"><span>🏆 Prize Pot <small style="color:var(--mut)">(17 × $5)</small></span><b id="heroPot">$85</b></div>
+      <button class="btn btn-y" style="width:100%" onclick="openJoin('Thumbnail Showdown')">🔥 $5 দিয়ে জয়েন করুন — 8 সিট বাকি</button>
+    </div>
+  </div>
+</div>
+
+<div class="ticker" id="ticker">🏆 <b>@sakib_ai</b> জিতলেন <b>$42</b> (Logo Blitz) &nbsp;•&nbsp; ⚡ নতুন ব্যাটল: <b>AI Thumbnail War</b> শুরু হচ্ছে 10 মিনিটে &nbsp;•&nbsp; 🎨 <b>@nabila_art</b> জিতলেন <b>$61</b> (Prompt Masters) &nbsp;•&nbsp; 💰 আজকের মোট পট: <b>$540</b> &nbsp;•&nbsp; 🗳️ ভোটিং চলছে: Battle #412 &nbsp;•&nbsp;</div>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">How it works</div>
+      <h2>কীভাবে কাজ করবে? 🎮</h2>
+      <p>মাত্র ৩ ধাপে ৩০ মিনিটে আয়। কোনো জটিলতা নেই — ঢুকুন, বানান, জিতুন।</p>
+    </div>
+    <div class="steps">
+      <div class="step" data-n="01"><div class="ic" style="background:rgba(255,214,10,.15)">🎟️</div><h3>১. এন্ট্রি নিন ($2–$10)</h3><p>পছন্দের ব্যাটল বেছে bKash / কার্ড / ক্রিপ্টো দিয়ে এন্ট্রি ফি দিন। প্রতি ব্যাটলে মাত্র <b>২৫টি সিট</b> — আগে এলে আগে পাবেন।</p></div>
+      <div class="step" data-n="02"><div class="ic" style="background:rgba(139,92,246,.18)">⏱️</div><h3>২. ৩০ মিনিটে বানান</h3><p>টপিক ঘোষণার সাথে সাথে টাইমার শুরু — যেমন "Best Tech Thumbnail" বা "Best AI Logo Prompt"। ডিজাইন বা প্রম্পট সাবমিট করুন।</p></div>
+      <div class="step" data-n="03"><div class="ic" style="background:rgba(34,197,94,.15)">🗳️</div><h3>৩. ভোট + প্রাইজ 💸</h3><p>অংশগ্রহণকারী ও কমিউনিটি ভোট দেবে। <b>সেরা ৩ জন</b> পট ভাগ করে পাবেন — <b>50% / 30% / 20%</b> (10% প্ল্যাটফর্ম ফি বাদে)। ইনস্ট্যান্ট পেআউট!</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BATTLES -->
+<section id="battles" style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Live & Upcoming</div>
+      <h2>আজকের ব্যাটলসমূহ ⚔️</h2>
+      <p>সিট শেষ হওয়ার আগেই জয়েন করুন। পট বাড়ে প্রতি জয়েনে।</p>
+    </div>
+    <div class="filter">
+      <button class="chip on" onclick="filterB(this,'all')">সবগুলো</button>
+      <button class="chip" onclick="filterB(this,'Thumbnail')">Thumbnail</button>
+      <button class="chip" onclick="filterB(this,'Logo')">Logo</button>
+      <button class="chip" onclick="filterB(this,'Prompt')">AI Prompt</button>
+    </div>
+    <div class="grid3" id="battleGrid"></div>
+  </div>
+</section>
+
+<!-- ARENA -->
+<section id="arena" style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Try it live</div>
+      <h2>ডেমো এরিনা — ভোট করে দেখুন 🗳️</h2>
+      <p>নিচে আপনার এন্ট্রি সাবমিট করুন, তারপর কমিউনিটির মতো ভোট দিন। এটাই আসল ব্যাটলের ফিল!</p>
+    </div>
+    <div class="play">
+      <div>
+        <h3>🎨 আপনার এন্ট্রি সাবমিট করুন</h3>
+        <div class="sub">30:00 টাইমার চলছে (ডেমো)। টাইটেল + প্রম্পট দিন।</div>
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <div class="timer" style="font-size:26px" id="arenaTimer">30:00</div>
+          <button class="btn btn-ghost btn-sm" id="timerBtn" onclick="toggleTimer()">⏸ Pause</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetArena()">↺ Reset</button>
+        </div>
+        <div class="field"><label>ডিজাইন টাইটেল</label><input id="eTitle" placeholder="যেমন: Neon Gaming Thumbnail"></div>
+        <div class="field"><label>AI Prompt / বর্ণনা</label><textarea id="ePrompt" rows="3" placeholder="যেমন: cyberpunk gamer portrait, neon rim light, bold yellow text..."></textarea></div>
+        <div class="field"><label>স্টাইল</label><select id="eEmoji"><option>🎨 Neon</option><option>🤖 Cyberpunk</option><option>🔥 Minimal</option><option>🌸 Anime</option><option>💎 Luxury</option></select></div>
+        <button class="btn btn-y" style="width:100%" onclick="submitEntry()">🚀 এন্ট্রি সাবমিট করুন</button>
+      </div>
+      <div>
+        <h3>🏆 লাইভ এন্ট্রিজ <span id="eCount" style="color:var(--y)">(4)</span></h3>
+        <div class="sub">হার্ট চাপ দিয়ে ভোট দিন — এক人 এক ভোট প্রতি এন্ট্রিতে।</div>
+        <div class="entries" id="entries"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIZE -->
+<section id="prize" style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Prize math</div>
+      <h2>প্রাইজ ক্যালকুলেটর 💰</h2>
+      <p>২৫ জন × এন্ট্রি ফি = পট। 10% ফি বাদে বাকিটা টপ ৩-এর। স্লাইডার ঘুরিয়ে দেখুন।</p>
+    </div>
+    <div class="calc">
+      <div>
+        <div class="field"><label>👥 প্লেয়ার সংখ্যা: <b id="vP" style="color:var(--y)">25</b> / 25</label><input type="range" id="rP" min="5" max="25" value="25" oninput="calc()"></div>
+        <div class="field"><label>🎟️ এন্ট্রি ফি: <b id="vF" style="color:var(--y)">$5</b></label><input type="range" id="rF" min="2" max="10" value="5" oninput="calc()"></div>
+        <div class="calc-vals">
+          <div><b id="cPot" style="color:var(--y)">$125</b><small>Total Pot</small></div>
+          <div><b id="cFee">$12.5</b><small>Platform 10%</small></div>
+          <div><b id="cNet" style="color:#4ade80">$112.5</b><small>Prize Pool</small></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>🥇 1st — 50%</span><b id="c1" style="color:var(--y)">$56.25</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>🥈 2nd — 30%</span><b id="c2">$33.75</b></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span>🥉 3rd — 20%</span><b id="c3">$22.50</b></div>
+        <div class="prize-bar"><div style="width:50%;background:linear-gradient(90deg,#ffd60a,#ff9f1c);color:#111">50%</div><div style="width:30%;background:#8b5cf6">30%</div><div style="width:20%;background:#22d3ee;color:#111">20%</div></div>
+        <p style="color:var(--mut);font-size:13px;margin-top:12px">উদাহরণ: 25 জন × $10 = $250 পট → ফি বাদে $225 → 🥇 পান $112.50! এক ৩০-মিনিট ব্যাটলেই 11x রিটার্ন।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WINNERS -->
+<section id="winners" style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Hall of fame</div>
+      <h2>সাম্প্রতিক উইনার্স 🏆</h2>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="wtable">
+      <tr><th>Rank</th><th>Winner</th><th>Battle</th><th>Votes</th><th>Prize</th></tr>
+      <tr><td class="medal">🥇</td><td><b>@prompt_queen</b> <small style="color:var(--mut)">Dhaka</small></td><td>AI Thumbnail War #409</td><td>❤️ 132</td><td style="color:var(--y);font-weight:700">$61.00</td></tr>
+      <tr><td class="medal">🥈</td><td><b>@rafi_designs</b> <small style="color:var(--mut)">Chattogram</small></td><td>AI Thumbnail War #409</td><td>❤️ 118</td><td style="font-weight:700">$36.60</td></tr>
+      <tr><td class="medal">🥉</td><td><b>@nabila_art</b> <small style="color:var(--mut)">Sylhet</small></td><td>AI Thumbnail War #409</td><td>❤️ 97</td><td style="font-weight:700">$24.40</td></tr>
+      <tr><td>4</td><td><b>@sakib_ai</b></td><td>Logo Blitz #408</td><td>❤️ 88</td><td style="color:var(--y);font-weight:700">$42.00</td></tr>
+      <tr><td>5</td><td><b>@tanvir.jpg</b></td><td>Prompt Masters #407</td><td>❤️ 76</td><td style="color:var(--y);font-weight:700">$38.50</td></tr>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding-top:10px">
+  <div class="wrap">
+    <div class="sec-head"><div class="kicker">FAQ</div><h2>সাধারণ প্রশ্ন ❓</h2></div>
+    <div class="faq">
+      <details open><summary>💸 টাকা কীভাবে পাবো?</summary><p>ব্যাটল শেষ + ভোট গণনার পরপরই আপনার ওয়ালেটে প্রাইজ যোগ হয়। bKash, নগদ, ব্যাংক বা ক্রিপ্টোতে তুলতে পারবেন (মিনিমাম $5)।</p></details>
+      <details><summary>🗳️ ভোটে কারচুপি হলে?</summary><p>প্রতি ইউজার প্রতি এন্ট্রিতে ১ ভোট। অংশগ্রহণকারীর ভোটের ওজন 60%, কমিউনিটির 40%। বট ভোট অটো-ডিটেক্ট হয়ে বাতিল হয়।</p></details>
+      <details><summary>👥 ২৫ সিট না ভরলে কী হবে?</summary><p>মিনিমাম ১০ জন হলেই ব্যাটল শুরু হয় (পট আনুপাতিক)। না হলে এন্ট্রি ফি 100% রিফান্ড।</p></details>
+      <details><summary>⏱️ দেরি করে ঢুকলে?</summary><p>শুরুর ৫ মিনিট পর্যন্ত লেট-জয়েন allowed। তবে টাইমার থামবে না — দেরি মানেই কম সময়!</p></details>
+      <details><summary>🎨 কী টুল ব্যবহার করা যাবে?</summary><p>যেকোনো টুল — Photoshop, Figma, Canva, Midjourney, DALL·E, Stable Diffusion। প্রম্পট-ব্যাটলে শুধু প্রম্পট টেক্সট জমা দিলেই হয়।</p></details>
+    </div>
+    <div style="text-align:center;margin-top:34px">
+      <h2 style="font-size:26px;margin-bottom:10px">রেডি? পরের ব্যাটল ১০ মিনিটে! ⚡</h2>
+      <p style="color:var(--mut);margin-bottom:18px">সিট সীমিত — এখনই জায়গা পাকা করুন।</p>
+      <button class="btn btn-y" style="font-size:17px;padding:15px 38px" onclick="openJoin('AI Thumbnail War')">⚔️ এখনই জয়েন করুন</button>
+    </div>
+  </div>
+</section>
+
+<footer>⚡ PromptBattle — ২৫ জন • ৩০ মিনিট • $2–$10 • টপ ৩ জিতবে। Made with ❤️ in Bangladesh 🇧🇩</footer>
+</div>
+
+<!-- JOIN MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="mTitle">⚔️ Join Battle</h3>
+    <div class="m-sub" id="mSub">Thumbnail Showdown • 30 min • 8 seats left</div>
+    <div class="pot"><span>🎟️ Entry Fee</span><b id="mFee">$5</b></div>
+    <label style="font-size:13px;color:var(--mut);font-weight:600">পেমেন্ট মেথড</label>
+    <div class="pay-opt">
+      <button class="on" onclick="paySel(this)">bKash</button>
+      <button onclick="paySel(this)">কার্ড</button>
+      <button onclick="paySel(this)">Crypto</button>
+    </div>
+    <div class="field"><label>ডিসপ্লে নাম</label><input id="mName" placeholder="@your_name"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeJoin()">বাতিল</button>
+      <button class="btn btn-y" style="flex:2" id="mGo" onclick="confirmJoin()">✅ Confirm & Pay</button>
+    </div>
+    <p style="font-size:12px;color:var(--mut);margin-top:12px;text-align:center">🔒 ডেমো মোড — আসল টাকা কাটবে না। ব্যালেন্স থেকে সিমুলেট হবে।</p>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+let balance = parseFloat(localStorage.getItem('pb_bal') || '25');
+let joined = JSON.parse(localStorage.getItem('pb_joined') || '[]');
+const battles = [
+  {id:1, title:'Thumbnail Showdown', cat:'Thumbnail', emoji:'🖼️', grad:'linear-gradient(135deg,#f59e0b,#ef4444)', fee:5, seats:17, total:25, time:'LIVE • 18:42 বাকি', tag:'🔴 LIVE', pot:85},
+  {id:2, title:'Logo Blitz', cat:'Logo', emoji:'💎', grad:'linear-gradient(135deg,#8b5cf6,#22d3ee)', fee:3, seats:21, total:25, time:'শুরু 10 মিনিটে', tag:'⏳ SOON', pot:63},
+  {id:3, title:'AI Prompt Masters', cat:'Prompt', emoji:'🤖', grad:'linear-gradient(135deg,#22c55e,#22d3ee)', fee:2, seats:12, total:25, time:'শুরু 1 ঘণ্টায়', tag:'⏳ SOON', pot:24},
+  {id:4, title:'Anime Cover War', cat:'Thumbnail', emoji:'🌸', grad:'linear-gradient(135deg,#ec4899,#8b5cf6)', fee:7, seats:9, total:25, time:'আজ রাত ৯টা', tag:'🌙 TONIGHT', pot:63},
+  {id:5, title:'Luxury Brand Logo', cat:'Logo', emoji:'👑', grad:'linear-gradient(135deg,#facc15,#a16207)', fee:10, seats:6, total:25, time:'কাল সকাল ১১টা', tag:'💎 PRO', pot:60},
+  {id:6, title:'Viral Hook Prompts', cat:'Prompt', emoji:'🔥', grad:'linear-gradient(135deg,#ef4444,#f97316)', fee:4, seats:15, total:25, time:'কাল বিকাল ৪টা', tag:'🔥 HOT', pot:60},
+];
+let curFilter = 'all', curBattle = battles[0];
+function renderBattles(){
+  const g = document.getElementById('battleGrid');
+  g.innerHTML = battles.filter(b=>curFilter==='all'||b.cat===curFilter).map(b=>{
+    const isJ = joined.includes(b.id);
+    return `<div class="bcard"><div class="bthumb" style="background:${b.grad}"><span class="tag">${b.tag}</span><span class="fee">$${b.fee} entry</span><span>${b.emoji}</span></div>
+    <div class="bbody"><h3>${b.title}</h3><div class="meta">${b.cat} • ⏱️ 30 min • ${b.time}</div>
+    <div class="progress"><i style="width:${b.seats/b.total*100}%"></i></div>
+    <div class="seats" style="margin-bottom:10px"><span>👥 ${b.seats}/${b.total} joined</span><span>${b.total-b.seats} সিট বাকি</span></div>
+    <div class="pot"><span>🏆 Prize Pot</span><b>$${b.pot}</b></div>
+    <button class="btn ${isJ?'btn-ghost':'btn-y'}" style="width:100%" ${isJ?'disabled':''} onclick="openJoin(${b.id})">${isJ?'✅ Joined — Good luck!':'⚔️ Join Battle'}</button></div></div>`;
+  }).join('');
+}
+function filterB(el,c){document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));el.classList.add('on');curFilter=c;renderBattles();}
+function updateBal(){document.getElementById('balance').textContent='$'+balance.toFixed(2);}
+function openJoin(id){
+  curBattle = typeof id==='string' ? battles[0] : (battles.find(b=>b.id===id)||battles[0]);
+  if(typeof id==='string'){curBattle={...battles[0],title:id};}
+  document.getElementById('mTitle').textContent='⚔️ '+curBattle.title;
+  document.getElementById('mSub').textContent=`${curBattle.cat||'Thumbnail'} • 30 min • ${curBattle.total-curBattle.seats} seats left • Pot $${curBattle.pot}`;
+  document.getElementById('mFee').textContent='$'+curBattle.fee;
+  document.getElementById('modal').classList.add('show');
+}
+function closeJoin(){document.getElementById('modal').classList.remove('show');}
+function paySel(el){document.querySelectorAll('.pay-opt button').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+function confirmJoin(){
+  const name=document.getElementById('mName').value.trim()||'@you';
+  if(balance<curBattle.fee){toast('❌ ব্যালেন্স কম! ডেমো ব্যালেন্স রিসেট করা হলো।');balance=25;updateBal();localStorage.setItem('pb_bal',balance);return;}
+  balance-=curBattle.fee; curBattle.pot+=curBattle.fee; curBattle.seats=Math.min(curBattle.total,curBattle.seats+1);
+  const real=battles.find(b=>b.id===curBattle.id); if(real&&!joined.includes(real.id)){joined.push(real.id);real.seats=curBattle.seats;real.pot=curBattle.pot;}
+  localStorage.setItem('pb_bal',balance); localStorage.setItem('pb_joined',JSON.stringify(joined));
+  updateBal(); renderBattles(); closeJoin();
+  document.getElementById('heroPot').textContent='$'+battles[0].pot;
+  toast(`🎉 ${name} — "${curBattle.title}"-এ জয়েন সফল! শুভকামনা ⚡`);
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3200);}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeJoin();});
+// hero countdown
+let heroSec=18*60+42;
+setInterval(()=>{heroSec=Math.max(0,heroSec-1);const m=String(Math.floor(heroSec/60)).padStart(2,'0'),s=String(heroSec%60).padStart(2,'0');document.getElementById('heroTimer').textContent=`${m}:${s}`;document.getElementById('heroProg').style.width=(100-heroSec/1800*100)+'%';},1000);
+// arena
+let entries=[
+  {t:'Neon Beast Thumbnail',p:'cyberpunk tiger, neon yellow text "BEAST"',e:'🎨',v:51,mine:false},
+  {t:'100 Days Logo',p:'minimal lotus + lightning, premium fintech logo',e:'💎',v:48,mine:false},
+  {t:'Viral Food Prompt',p:'drooling burger macro, steam, 8k commercial photo',e:'🔥',v:39,mine:false},
+  {t:'Anime Sky Cover',p:'makoto shinkai clouds, lens flare, dreamy',e:'🌸',v:27,mine:false},
+];
+let voted=new Set(), aSec=30*60, aRun=true;
+function renderEntries(){
+  const sorted=[...entries].sort((a,b)=>b.v-a.v);
+  document.getElementById('eCount').textContent=`(${entries.length})`;
+  document.getElementById('entries').innerHTML=sorted.map((en)=>{
+    const i=entries.indexOf(en);
+    const rank=i===sorted.indexOf(sorted[0])&&en.v>0?'👑 ':'';
+    return `<div class="entry"><div class="thumb" style="background:rgba(255,255,255,.07)">${en.e}</div>
+    <div class="inf"><b>${rank}${en.t}</b><small>${en.p.slice(0,52)}${en.p.length>52?'…':''}</small><small style="color:var(--y)">❤️ ${en.v} votes ${en.mine?'• YOU':''}</small></div>
+    <button class="vote-btn ${voted.has(i)?'voted':''}" onclick="vote(${i})">${voted.has(i)?'❤️ Voted':'🤍 Vote'}</button></div>`;
+  }).join('');
+}
+function vote(i){ if(voted.has(i)){voted.delete(i);entries[i].v--;}else{voted.add(i);entries[i].v++;toast('🗳️ ভোট গণনা হয়েছে!');} renderEntries(); }
+function submitEntry(){
+  const t=document.getElementById('eTitle').value.trim(), p=document.getElementById('ePrompt').value.trim(), e=document.getElementById('eEmoji').value.split(' ')[0];
+  if(!t||!p){toast('⚠️ টাইটেল + প্রম্পট দুটোই দিন');return;}
+  entries.unshift({t,p,e,v:0,mine:true});
+  document.getElementById('eTitle').value='';document.getElementById('ePrompt').value='';
+  renderEntries(); toast('🚀 এন্ট্রি সাবমিট হয়েছে! ভোট সংগ্রহ করুন ❤️');
+}
+function toggleTimer(){aRun=!aRun;document.getElementById('timerBtn').textContent=aRun?'⏸ Pause':'▶️ Resume';}
+function resetArena(){aSec=30*60;}
+setInterval(()=>{if(aRun&&aSec>0)aSec--;const m=String(Math.floor(aSec/60)).padStart(2,'0'),s=String(aSec%60).padStart(2,'0');document.getElementById('arenaTimer').textContent=`${m}:${s}`;},1000);
+function calc(){
+  const p=+document.getElementById('rP').value, f=+document.getElementById('rF').value;
+  document.getElementById('vP').textContent=p; document.getElementById('vF').textContent='$'+f;
+  const pot=p*f, fee=pot*0.10, net=pot-fee;
+  document.getElementById('cPot').textContent='$'+pot.toFixed(0);
+  document.getElementById('cFee').textContent='$'+fee.toFixed(1);
+  document.getElementById('cNet').textContent='$'+net.toFixed(1);
+  document.getElementById('c1').textContent='$'+(net*0.5).toFixed(2);
+  document.getElementById('c2').textContent='$'+(net*0.3).toFixed(2);
+  document.getElementById('c3').textContent='$'+(net*0.2).toFixed(2);
+}
+updateBal();renderBattles();renderEntries();calc();
+</script>
+</body>
+</html>
