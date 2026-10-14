@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PlayGround — Interactive Story Preview</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height: 1.5; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px; }
+  header { margin-bottom: 24px; }
+  h1 { font-size: 2rem; margin: 0 0 8px; }
+  .card { border: 1px solid #ccc; border-radius: 12px; padding: 20px; margin: 16px 0; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: #eee; font-size: 0.85rem; }
+  button { font-size: 1rem; padding: 10px 18px; border-radius: 8px; cursor: pointer; }
+  #scene { min-height: 3em; margin-top: 12px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <span class="badge">PlayGround static preview</span>
+    <h1>PlayGround — Interactive Story Preview</h1>
+    <p>A minimal, safe placeholder scene. This build contains no explicit or adult content.</p>
+  </header>
+  <section class="card">
+    <h2>Scene: Your Room as the Stage</h2>
+    <p id="scene">You hear a soft chime first. Then you notice a friendly narrator waiting by your doorway, ready when you are.</p>
+    <button id="advance" type="button">Advance scene</button>
+  </section>
+  <section class="card">
+    <h2>About this build</h2>
+    <p>Static site served from <code>dist/</code>. Startup is handled by <code>start.sh</code>; screenshots by <code>capture.sh</code>.</p>
+  </section>
+</main>
+<script>
+  const lines = [
+    "You hear a soft chime first. Then you notice a friendly narrator waiting by your doorway, ready when you are.",
+    "The room feels calm. Light shifts near your wall as the narrator gestures to an imagined map on your table.",
+    "A new choice appears: explore the hallway, rest by your seat, or ask the narrator a question.",
+    "The narrator nods, remembers what you chose, and the scene settles — ready for your next move."
+  ];
+  let i = 0;
+  document.getElementById("advance").addEventListener("click", () => {
+    i = (i + 1) % lines.length;
+    document.getElementById("scene").textContent = lines[i];
+  });
+</script>
+</body>
+</html>
