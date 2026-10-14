@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#79b34a" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>MiniCraft 3D — Voxel Builder (Phone / Tablet / PC)</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="styles.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div id="game"></div>
+
+<div id="vignette"></div>
+<div id="crosshair">+</div>
+<div id="highlight-label"></div>
+
+<header id="topbar">
+  <div class="brand">⛏️ MiniCraft 3D</div>
+  <div id="stats"><span id="fps">60 fps</span><span id="pos">0, 0, 0</span></div>
+  <div class="top-actions">
+    <button id="btn-fly-top" class="chip" title="Toggle fly">🕊️ Fly: Off</button>
+    <button id="btn-regen" class="chip" title="New world">🎲 New</button>
+    <button id="btn-help" class="chip" title="Help">❓</button>
+  </div>
+</header>
+
+<div id="toast"></div>
+
+<footer id="hotbar"></footer>
+
+<!-- Touch controls -->
+<div id="touch-ui">
+  <div id="joystick"><div id="stick"></div></div>
+  <div id="touch-buttons">
+    <button id="btn-jump" class="tbtn big">⬆</button>
+    <button id="btn-break" class="tbtn">⛏</button>
+    <button id="btn-place" class="tbtn">🧱</button>
+  </div>
+</div>
+
+<!-- Main menu: exactly ONE primary Play button so auto-capture can enter gameplay -->
+<div id="menu">
+  <div class="card">
+    <h1>⛏️ MiniCraft 3D</h1>
+    <p class="sub">Voxel builder &amp; explorer · Phone · Tablet · PC</p>
+    <div class="row seed-row">
+      <label for="seed">World seed</label>
+      <input id="seed" inputmode="numeric" value="1337" />
+      <button id="btn-dice" type="button" title="Random seed">🎲</button>
+    </div>
+    <button id="btn-play" type="button">Play</button>
+    <div class="help-grid">
+      <div><b>🖱️ PC</b><br/>WASD move · Mouse look (click to lock) · Space jump · Left-click break · Right-click place · 1–9 / wheel select · F fly · E place</div>
+      <div><b>📱 Phone / Tablet</b><br/>Left stick move · Drag right side to look · ⬆ jump · ⛏ break · 🧱 place · Tap hotbar to select</div>
+    </div>
+    <p class="tiny">Procedural terrain · trees · water · day cycle · saves locally. No downloads — runs in the browser.</p>
+  </div>
+</div>
+
+<div id="help" class="hidden">
+  <div class="card">
+    <h2>How to play</h2>
+    <ul>
+      <li><b>Move:</b> WASD / left stick · <b>Look:</b> mouse / drag</li>
+      <li><b>Jump:</b> Space / ⬆ · double-tap ⬆ or F for fly</li>
+      <li><b>Break:</b> left click / ⛏ button / tap center on mobile</li>
+      <li><b>Place:</b> right click / E / 🧱 button</li>
+      <li><b>Blocks:</b> keys 1–9, wheel, or tap hotbar</li>
+      <li><b>Fly:</b> F or 🕊️ button — Space/C to go up/down</li>
+    </ul>
+    <button id="btn-close-help" type="button">Close</button>
+  </div>
+</div>
+
+<div id="loading"><div class="spin"></div><p>Generating world…</p></div>
+
+<script type="module" src="game.js"></script>
+</body>
+</html>
