@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>hiCine — Watch Movies & Series</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#000;--card:#0d0d0d;--red:#e50914;--muted:#9a9a9a;--pill:#161d29}
+body{background:var(--bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;min-height:100vh;padding-bottom:92px}
+/* top promo banner */
+.promo{background:linear-gradient(90deg,#1a0505,#2b0a0a);border-bottom:1px solid #331111;display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:13px;position:sticky;top:0;z-index:50}
+.promo .dot{width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);flex-shrink:0;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.promo p{flex:1;line-height:1.3;color:#f3d9d9}
+.promo .dl{background:var(--red);color:#fff;border:0;border-radius:10px;padding:9px 18px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+.promo .x{background:none;border:0;color:#8a8a8a;font-size:18px;cursor:pointer;padding:4px 6px}
+/* header */
+header{display:flex;align-items:center;gap:12px;padding:16px 14px;position:sticky;top:0;z-index:40;background:#000}
+header.stuck{top:44px}
+.logo{display:flex;align-items:center;font-weight:900;font-size:28px;letter-spacing:-1px;user-select:none}
+.logo .cube{width:44px;height:40px;background:#fff;color:#000;display:grid;place-items:center;font-size:26px;border-radius:4px;transform:perspective(200px) rotateY(-18deg);box-shadow:-3px 0 0 #555;margin-right:2px}
+.search{flex:1;display:flex;align-items:center;background:#232323;border-radius:12px;padding:12px 14px;gap:10px;max-width:640px;margin-left:auto}
+.search svg{flex-shrink:0;opacity:.8}
+.search input{flex:1;background:none;border:0;outline:0;color:#fff;font-size:15px}
+.search input::placeholder{color:#a8a8a8}
+/* grid */
+.wrap{max-width:1240px;margin:0 auto;padding:2px 12px 20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 12px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr);gap:22px 18px}}
+@media(min-width:1024px){.grid{grid-template-columns:repeat(6,1fr)}}
+.card{cursor:pointer}
+.poster{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:2/3;background:#1a1a1a}
+.poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.card:hover .poster img{transform:scale(1.06)}
+.badge{position:absolute;left:0;right:0;bottom:8px;display:flex;flex-direction:column;align-items:center;gap:0}
+.ep{background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:5px 12px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.5);white-space:nowrap}
+@media(min-width:700px){.ep{font-size:12px}}
+.watch{background:#fff;color:#111;font-size:11px;font-weight:600;padding:5px 14px;border-radius:0 0 4px 4px;margin-top:-2px;white-space:nowrap}
+.date{color:var(--muted);font-size:11px;margin:8px 0 3px}
+.title{font-size:13.5px;line-height:1.25;font-weight:500;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+@media(min-width:700px){.title{font-size:14.5px}}
+/* floating filter */
+.filterBar{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:45;background:rgba(18,26,38,.96);border:1px solid #263244;border-radius:999px;display:flex;align-items:center;padding:6px;gap:2px;backdrop-filter:blur(8px);box-shadow:0 8px 30px rgba(0,0,0,.6)}
+.filterBar button{border:0;background:none;color:#b9c3d1;font-size:14px;padding:9px 16px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.filterBar button.active{background:#fff;color:#111;font-weight:700}
+/* bottom nav */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:46;background:#0a0a0a;border-top:1px solid #1e1e1e;display:flex;justify-content:space-around;padding:8px 6px calc(10px + env(safe-area-inset-bottom))}
+nav button{background:none;border:0;color:#7d7d7d;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;cursor:pointer;padding:6px 18px;border-radius:12px;min-width:72px}
+nav button.active{color:#fff;background:#1d1d1d}
+nav svg{width:24px;height:24px}
+/* to top */
+#toTop{position:fixed;right:16px;bottom:150px;width:52px;height:52px;border-radius:50%;background:var(--red);border:0;color:#fff;font-size:22px;cursor:pointer;z-index:45;box-shadow:0 6px 20px rgba(229,9,20,.5);display:grid;place-items:center}
+/* modal */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.sheet{background:#141414;border:1px solid #2a2a2a;border-radius:16px;max-width:520px;width:100%;overflow:hidden}
+.sheet .player{aspect-ratio:16/9;background:linear-gradient(135deg,#220505,#000);display:grid;place-items:center;position:relative}
+.playBtn{width:68px;height:68px;border-radius:50%;background:var(--red);border:0;color:#fff;font-size:26px;cursor:pointer}
+.sheet .info{padding:16px}
+.sheet h2{font-size:18px;margin-bottom:6px}
+.sheet .meta{color:var(--muted);font-size:13px;margin-bottom:12px}
+.sheet .row{display:flex;gap:10px}
+.btn{flex:1;border:0;border-radius:10px;padding:12px;font-weight:700;font-size:14px;cursor:pointer}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:#262626;color:#fff}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 10px;display:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:160px;background:#fff;color:#111;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:.25s;z-index:120;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="promo" id="promo">
+  <span class="dot"></span>
+  <p>Streaming is now available — download StreamApp (3 MB) to watch online.</p>
+  <button class="dl" onclick="toast('Starting StreamApp download… (3 MB)')">Download →</button>
+  <button class="x" onclick="document.getElementById('promo').remove()" aria-label="close">✕</button>
+</div>
+<header>
+  <div class="logo"><span class="cube">hi</span></div>
+  <label class="search">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input id="q" placeholder="search here..." oninput="render()">
+  </label>
+</header>
+<div class="wrap"><div class="grid" id="grid"></div><div class="empty" id="empty">No results found. Try another title.</div></div>
+<div class="filterBar" id="filterBar">
+  <button data-f="hollywood">🎬 Hollywood</button>
+  <button data-f="all" class="active">All</button>
+  <button data-f="bollywood">🛕 Bollywood</button>
+</div>
+<button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="top">⌃</button>
+<nav id="bottomNav">
+  <button data-f="all" class="active"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-4v-6H10v6H6v-9H3z"/></svg>Home</button>
+  <button data-f="trending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trending</button>
+  <button data-f="hollywood"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="M16 10l5-3v11l-5-3"/></svg>Movies</button>
+  <button data-f="series"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/></svg>Series</button>
+</nav>
+<div class="modal" id="modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet">
+    <div class="player"><button class="playBtn" onclick="toast('Loading player… Enjoy! 🍿')">▶</button></div>
+    <div class="info"><h2 id="mTitle"></h2><div class="meta" id="mMeta"></div>
+      <div class="row"><button class="btn red" onclick="toast('Streaming started')">Watch Now</button><button class="btn ghost" onclick="document.getElementById('modal').classList.remove('open')">Close</button></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const DATA=[
+{t:"Take Charge of My Heart",d:"Oct 10, 2026",ep:"S1 Episode 10",c:"series",seed:"hicine-kdrama1"},
+{t:"Chip In",d:"Oct 10, 2026",ep:"S1 Episode 16",c:"series",seed:"hicine-kdrama2"},
+{t:"That Time I Got Reincarnated as a Slime",d:"Oct 10, 2026",ep:"S4 Episode 20",c:"series",seed:"hicine-anime-slime"},
+{t:"The Elusive Samurai",d:"Oct 10, 2026",ep:"S2 Episode 9",c:"series",seed:"hicine-anime-samurai"},
+{t:"I Became a Legend After My 10 Year Hiatus",d:"Oct 10, 2026",ep:"S1 Episode 12",c:"series",seed:"hicine-anime-legend"},
+{t:"You, Me & Tuscany",d:"Oct 10, 2026",ep:"",c:"hollywood",seed:"hicine-tuscany"},
+{t:"Ghosts of Mars",d:"Oct 10, 2026",ep:"",c:"hollywood",seed:"hicine-mars"},
+{t:"Keu Bole Biplobi, Keu Bole Dakat",d:"Oct 10, 2026",ep:"",c:"bollywood",seed:"hicine-biplobi"},
+{t:"Adbhut",d:"Oct 10, 2026",ep:"",c:"bollywood",seed:"hicine-adbhut"},
+{t:"Matchbox the Movie",d:"Oct 9, 2026",ep:"",c:"hollywood",seed:"hicine-matchbox"},
+{t:"Reporting Live",d:"Oct 9, 2026",ep:"",c:"bollywood",seed:"hicine-reporting"},
+{t:"Apollo Has Fallen",d:"Oct 9, 2026",ep:"S1 Episode 5",c:"hollywood",seed:"hicine-apollo"},
+{t:"The Punisher: Final Cut",d:"Oct 9, 2026",ep:"",c:"hollywood",seed:"hicine-punisher"},
+{t:"Echoes of the Island",d:"Oct 9, 2026",ep:"",c:"trending",seed:"hicine-island"},
+{t:"The Ramparts",d:"Oct 8, 2026",ep:"",c:"trending",seed:"hicine-ramparts"},
+{t:"Neon City Nights",d:"Oct 8, 2026",ep:"S1 Episode 3",c:"series",seed:"hicine-neon"},
+{t:"Desert Storm Rising",d:"Oct 8, 2026",ep:"",c:"hollywood",seed:"hicine-desert"},
+{t:"Monsoon Wedding 2",d:"Oct 8, 2026",ep:"",c:"bollywood",seed:"hicine-monsoon"},
+];
+let filter="all";
+function img(s){return "https://picsum.photos/seed/"+s+"/400/600"}
+function render(){
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  const g=document.getElementById('grid');g.innerHTML="";
+  let n=0;
+  DATA.filter(m=>{
+    const okF=filter==="all"?true:filter==="trending"? (m.c==="trending"||m.ep!=="") : filter==="series"? (m.c==="series") : m.c===filter;
+    const okQ=!q||m.t.toLowerCase().includes(q);
+    return okF&&okQ;
+  }).forEach(m=>{
+    n++;
+    const el=document.createElement('div');el.className='card';
+    el.innerHTML=`<div class="poster"><img loading="lazy" src="${img(m.seed)}" alt="${m.t}">${m.ep?`<div class="badge"><span class="ep">${m.ep}</span><span class="watch">Watch Now</span></div>`:''}</div><div class="date">${m.d}</div><div class="title">${m.t}</div>`;
+    el.onclick=()=>{document.getElementById('mTitle').textContent=m.t;document.getElementById('mMeta').textContent=(m.ep?m.ep+' • ':'')+m.d+' • '+m.c;document.getElementById('modal').classList.add('open')};
+    g.appendChild(el);
+  });
+  document.getElementById('empty').style.display=n?"none":"block";
+}
+function setFilter(f){
+  filter=f;
+  document.querySelectorAll('#filterBar button').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
+  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',(b.dataset.f===f)||(f==='all'&&b.dataset.f==='all')||(f==='bollywood'&&b.dataset.f==='hollywood'&&false)));
+  if(f==='bollywood'||f==='hollywood'){/* keep Home highlighted only for all */}
+  if(f!=='all')document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.f===f||(f==='bollywood'&&b.dataset.f==='hollywood'?false:false)));
+  render();
+}
+document.querySelectorAll('#filterBar button').forEach(b=>b.onclick=()=>setFilter(b.dataset.f));
+document.querySelectorAll('#bottomNav button').forEach(b=>b.onclick=()=>{setFilter(b.dataset.f);window.scrollTo({top:0,behavior:'smooth'})});
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+render();
+</script>
+</body>
+</html>
