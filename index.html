@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prompt Arena — Win Real Money in 30-Min Design Battles</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['Inter','sans-serif'], display: ['Space Grotesk','sans-serif'] },
+    colors: { arena: { bg:'#070B14', card:'#0E1526', line:'#1E2A44', gold:'#FFC93C', green:'#22E584', purple:'#8B5CF6' } }
+  }}
+}
+</script>
+<style>
+body{background:#070B14;color:#E8EEF9;font-family:Inter,sans-serif}
+.glass{background:rgba(14,21,38,.82);backdrop-filter:blur(14px)}
+.card-hover{transition:.25s}.card-hover:hover{transform:translateY(-4px);border-color:#FFC93C55;box-shadow:0 18px 50px -18px #FFC93C44}
+.live-dot{animation:pulse 1.4s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.timer-bar{transition:width 1s linear}
+.scroll-thin::-webkit-scrollbar{height:6px;width:6px}.scroll-thin::-webkit-scrollbar-thumb{background:#26355a;border-radius:99px}
+.modal-bg{background:rgba(3,6,14,.78);backdrop-filter:blur(6px)}
+input,textarea,select{outline:none}
+input:focus,textarea:focus,select:focus{border-color:#FFC93C!important;box-shadow:0 0 0 3px #FFC93C22}
+.toast-in{animation:slideIn .3s ease}@keyframes slideIn{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.vote-btn.voted{background:#FFC93C!important;color:#111!important;border-color:#FFC93C!important}
+.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="sticky top-0 z-40 glass border-b border-arena-line">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 grid place-items-center text-xl font-black text-black">⚡</div>
+      <div>
+        <div class="font-display font-700 font-bold text-lg leading-none tracking-tight">PROMPT <span class="text-arena-gold">ARENA</span></div>
+        <div class="text-[11px] text-slate-400 tracking-widest uppercase">Win real money • 30-min battles</div>
+      </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-6 ml-8 text-sm text-slate-300">
+      <a href="#rooms" class="hover:text-white">Battles</a>
+      <a href="#how" class="hover:text-white">How it works</a>
+      <a href="#winners" class="hover:text-white">Winners</a>
+      <a href="#faq" class="hover:text-white">FAQ</a>
+    </nav>
+    <div class="flex-1"></div>
+    <button id="walletPill" onclick="openWallet()" class="hidden items-center gap-2 bg-[#121C33] border border-arena-line rounded-full pl-3 pr-1.5 py-1.5 hover:border-arena-gold/60">
+      <span class="text-arena-green font-bold text-sm">●</span>
+      <span id="balanceText" class="font-bold text-sm">$0.00</span>
+      <span class="bg-arena-gold text-black text-xs font-bold rounded-full px-3 py-1.5">+ Deposit</span>
+    </button>
+    <div id="authArea"></div>
+  </div>
+  <div class="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-purple-500/15 border-t border-arena-line">
+    <div class="max-w-7xl mx-auto px-4 py-1.5 text-[12px] text-amber-200/90 flex items-center gap-2 overflow-x-auto whitespace-nowrap scroll-thin">
+      <span class="live-dot inline-block w-2 h-2 rounded-full bg-red-500"></span>
+      <span id="ticker">18 live rooms • 342 designers battling now • $4,820 paid out this week</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="max-w-7xl mx-auto px-4 pt-10 pb-6 grid lg:grid-cols-2 gap-8 items-center">
+  <div>
+    <div class="inline-flex items-center gap-2 bg-arena-green/10 border border-arena-green/30 text-arena-green text-xs font-bold rounded-full px-3 py-1.5 mb-4">
+      <span class="w-2 h-2 rounded-full bg-arena-green live-dot"></span> 18 ROOMS LIVE NOW — ENTRY $2 TO $10
+    </div>
+    <h1 class="font-display font-black text-4xl md:text-6xl leading-[1.02] tracking-tight">Design for 30 min.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500">Win real cash.</span></h1>
+    <p class="text-slate-400 mt-4 max-w-lg">Join a 25-player micro-battle — thumbnails, logos, AI prompts. Community + players vote. <b class="text-white">Top 3 split the prize pool.</b> No free entry — every fighter pays, every winner gets paid.</p>
+    <div class="flex flex-wrap gap-3 mt-6">
+      <a href="#rooms" class="bg-arena-gold text-black font-extrabold rounded-xl px-6 py-3.5 hover:brightness-110">⚡ Enter a Battle</a>
+      <button onclick="openWallet()" class="border border-arena-line rounded-xl px-6 py-3.5 font-bold hover:border-arena-gold/60">💰 Deposit & Play</button>
+    </div>
+    <div class="grid grid-cols-3 gap-3 mt-8 max-w-lg">
+      <div class="bg-arena-card border border-arena-line rounded-2xl p-4"><div class="font-display font-black text-2xl text-arena-gold" id="statPot">$0</div><div class="text-xs text-slate-400">Live prize pools</div></div>
+      <div class="bg-arena-card border border-arena-line rounded-2xl p-4"><div class="font-display font-black text-2xl" id="statPlayers">0</div><div class="text-xs text-slate-400">Battling now</div></div>
+      <div class="bg-arena-card border border-arena-line rounded-2xl p-4"><div class="font-display font-black text-2xl text-arena-green" id="statPaid">$0</div><div class="text-xs text-slate-400">Paid this week</div></div>
+    </div>
+  </div>
+  <div class="bg-arena-card border border-arena-line rounded-3xl p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display font-bold">🔥 How it works</h3>
+      <span class="text-xs bg-red-500/15 text-red-400 border border-red-500/30 rounded-full px-2.5 py-1 font-bold">30:00 EACH BATTLE</span>
+    </div>
+    <div class="space-y-3 text-sm">
+      <div class="flex gap-3 bg-[#0A1122] border border-arena-line rounded-2xl p-4"><div class="w-9 h-9 shrink-0 rounded-xl bg-arena-gold text-black font-black grid place-items-center">1</div><div><b>Sign in with Gmail + Deposit</b><div class="text-slate-400">Google login only. Add funds via card, bKash, Nagad, Rocket or crypto. Minimum deposit $5.</div></div></div>
+      <div class="flex gap-3 bg-[#0A1122] border border-arena-line rounded-2xl p-4"><div class="w-9 h-9 shrink-0 rounded-xl bg-arena-purple text-white font-black grid place-items-center">2</div><div><b>Pay entry ($2–$10) — no pay, no entry</b><div class="text-slate-400">Each room fits exactly <b class="text-white">25 players</b>. Entry is locked and deducted from your wallet. Free spectators can watch & vote but can't win.</div></div></div>
+      <div class="flex gap-3 bg-[#0A1122] border border-arena-line rounded-2xl p-4"><div class="w-9 h-9 shrink-0 rounded-xl bg-arena-green text-black font-black grid place-items-center">3</div><div><b>Submit in 30 min → Vote → Top 3 paid</b><div class="text-slate-400">Pot = entries × 25 minus 15% arena fee. Split <b class="text-white">50% / 30% / 20%</b>. Winnings go straight to your wallet — withdraw anytime (min $10).</div></div></div>
+    </div>
+    <div class="mt-4 text-xs text-slate-500 bg-black/30 border border-arena-line rounded-xl p-3">🛡️ Fair play: 1 entry + 1 vote per player per room. Self-voting blocked. Copy-paste / stolen work = ban + no refund.</div>
+  </div>
+</section>
+
+<!-- ══════════ FILTERS ══════════ -->
+<section id="rooms" class="max-w-7xl mx-auto px-4 pt-4">
+  <div class="flex flex-wrap items-center gap-2 mb-4">
+    <h2 class="font-display font-black text-2xl mr-2">Live Battle Rooms <span class="text-sm font-sans font-medium text-slate-400" id="roomCount"></span></h2>
+    <div class="flex-1"></div>
+    <div id="filters" class="flex gap-2 overflow-x-auto scroll-thin"></div>
+  </div>
+  <div id="roomGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</section>
+
+<!-- ══════════ MY BATTLES / WINNERS ══════════ -->
+<section class="max-w-7xl mx-auto px-4 py-10 grid lg:grid-cols-2 gap-4">
+  <div class="bg-arena-card border border-arena-line rounded-3xl p-6">
+    <h3 class="font-display font-bold text-lg mb-1">🎮 My Battles</h3>
+    <p class="text-xs text-slate-500 mb-4">Sign in to see entries, votes and winnings.</p>
+    <div id="myBattles" class="space-y-2.5"></div>
+  </div>
+  <div id="winners" class="bg-arena-card border border-arena-line rounded-3xl p-6">
+    <h3 class="font-display font-bold text-lg mb-1">🏆 Latest Winners <span class="text-xs font-sans text-arena-green font-bold">• real payouts</span></h3>
+    <p class="text-xs text-slate-500 mb-4">Top 3 of every finished room are paid instantly.</p>
+    <div id="winnerFeed" class="space-y-2.5"></div>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section id="faq" class="max-w-7xl mx-auto px-4 pb-14">
+  <div class="bg-gradient-to-br from-[#101A33] to-[#0B1224] border border-arena-line rounded-3xl p-6 md:p-8">
+    <h3 id="how" class="font-display font-black text-2xl mb-4">Questions, answered.</h3>
+    <div class="grid md:grid-cols-2 gap-3 text-sm" id="faqGrid"></div>
+    <div class="mt-5 text-[11px] text-slate-500 leading-relaxed">⚠️ <b>Real-money skill gaming.</b> 18+ only. Entry fees are non-refundable once a battle starts. Winnings are skill prizes, not gambling — but play responsibly. Withdrawals are reviewed within 24h. Production integration: connect Stripe / SSLCommerz / bKash PGW + Firebase Auth (Google) + Firestore before accepting live payments. Demo build stores data locally in your browser.</div>
+  </div>
+  <footer class="text-center text-xs text-slate-600 pt-6">© 2026 Prompt Arena • Skill-based design battles • <a class="underline" href="#" onclick="openWallet();return false;">Wallet</a> • Fair-play policy • Support: arena@promptarena.gg</footer>
+</section>
+
+<!-- ══════════ ROOM MODAL ══════════ -->
+<div id="roomModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 modal-bg">
+  <div class="bg-arena-card border border-arena-line rounded-3xl w-full max-w-3xl max-h-[92vh] overflow-y-auto scroll-thin">
+    <div id="roomModalBody"></div>
+  </div>
+</div>
+
+<!-- ══════════ WALLET MODAL ══════════ -->
+<div id="walletModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 modal-bg">
+  <div class="bg-arena-card border border-arena-line rounded-3xl w-full max-w-lg max-h-[92vh] overflow-y-auto scroll-thin p-6">
+    <div class="flex items-center justify-between mb-1">
+      <h3 class="font-display font-black text-xl">💰 My Wallet</h3>
+      <button onclick="closeWallet()" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 font-bold">✕</button>
+    </div>
+    <div class="bg-gradient-to-r from-amber-500/20 to-purple-500/20 border border-arena-gold/30 rounded-2xl p-4 mb-4 flex items-center justify-between">
+      <div><div class="text-xs text-slate-400">Available balance</div><div id="walletBalance" class="font-display font-black text-3xl">$0.00</div></div>
+      <div class="text-right text-xs text-slate-400">Total earned<div id="walletEarned" class="text-arena-green font-bold text-base">$0.00</div></div>
+    </div>
+    <div class="grid grid-cols-3 gap-2 mb-4 text-sm font-bold">
+      <button id="tabDeposit" onclick="walletTab('deposit')" class="rounded-xl py-2.5 bg-arena-gold text-black">Deposit</button>
+      <button id="tabWithdraw" onclick="walletTab('withdraw')" class="rounded-xl py-2.5 bg-white/5 border border-arena-line">Withdraw</button>
+      <button id="tabHistory" onclick="walletTab('history')" class="rounded-xl py-2.5 bg-white/5 border border-arena-line">History</button>
+    </div>
+    <div id="walletContent"></div>
+  </div>
+</div>
+
+<!-- ══════════ AUTH MODAL ══════════ -->
+<div id="authModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 modal-bg">
+  <div class="bg-arena-card border border-arena-line rounded-3xl w-full max-w-sm p-7 text-center">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 grid place-items-center text-2xl font-black text-black mb-3">⚡</div>
+    <h3 class="font-display font-black text-xl">Join Prompt Arena</h3>
+    <p class="text-sm text-slate-400 mt-1 mb-5">Sign in with Gmail to battle & earn real money.</p>
+    <button onclick="googleLogin()" class="w-full flex items-center justify-center gap-3 bg-white text-black font-bold rounded-xl py-3 hover:brightness-95">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.5h6.5c-.1 1.1-.8 2.7-2.4 3.8l-.1.1 3.5 2.7.2.1c2.2-2 3.8-5.1 3.8-8.9z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.1 0-5.8-2.1-6.8-5l-.1.1-3.6 2.8v.1C3.5 21.3 7.5 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.7.4-2.4l-.1-.1-3.6-2.8-.1.1C.5 8.6 0 10.2 0 12s.5 3.4 1.4 4.9l3.8-2.5z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.5 0 3.5 2.7 1.4 6.8l3.8 3c1-2.9 3.7-5.1 6.8-5.1z"/></svg>
+      Continue with Gmail
+    </button>
+    <div class="flex items-center gap-3 my-4 text-xs text-slate-500"><div class="flex-1 h-px bg-arena-line"></div>or<div class="flex-1 h-px bg-arena-line"></div></div>
+    <input id="gmailInput" type="email" placeholder="you@gmail.com" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 text-sm mb-2" />
+    <button onclick="emailLogin()" class="w-full border border-arena-line rounded-xl py-3 font-bold text-sm hover:border-arena-gold/60">Sign in / Sign up with Email</button>
+    <p class="text-[11px] text-slate-500 mt-4">By continuing you confirm you are 18+ and accept the fair-play & refund policy. Production uses Google Identity Services + Firebase Auth.</p>
+    <button onclick="closeAuth()" class="text-xs text-slate-500 mt-3 underline">Cancel</button>
+  </div>
+</div>
+
+<div id="toasts" class="fixed bottom-4 right-4 z-[60] space-y-2 w-[320px] max-w-[90vw]"></div>
+
+<script>
+/* ═══════════════ PROMPT ARENA — front-end engine (demo w/ production hooks) ═══════════════ */
+const LS = 'prompt_arena_v1';
+const FEE = 0.15; // 15% platform fee
+const MIN_DEPOSIT = 5, MIN_WITHDRAW = 10;
+
+const CATS = ['All','Thumbnail','Logo','AI Prompt','UI','Poster','T-Shirt'];
+const ROOMS_SEED = [
+  {id:'thumb-viral', cat:'Thumbnail', icon:'🖼️', title:'Viral Thumbnail Battle', brief:'Design a click-magnet YouTube thumbnail for "I Survived 50 Hours Buried Alive". 1280×720. Text + face.', entry:5, kind:'design'},
+  {id:'logo-clash', cat:'Logo', icon:'✦', title:'Logo Master Clash', brief:'Logo for a coffee brand "KOFFIQLUB" — bold, minimal, works on black cup.', entry:4, kind:'design'},
+  {id:'prompt-beast', cat:'AI Prompt', icon:'🤖', title:'Best AI Image Prompt', brief:'Write the single best Midjourney prompt for "cyberpunk Dhaka street in monsoon, cinematic".', entry:2, kind:'prompt'},
+  {id:'title-show', cat:'Thumbnail', icon:'🏆', title:'Title Showdown: Finance', brief:'Best title + thumbnail concept for "How I Saved $10K in 6 Months". CTR wins.', entry:3, kind:'design'},
+  {id:'tee-sprint', cat:'T-Shirt', icon:'👕', title:'T-Shirt Design Sprint', brief:'Streetwear tee graphic — "HUSTLE IN SILENCE". One color, print-ready vibe.', entry:6, kind:'design'},
+  {id:'ui-speed', cat:'UI', icon:'📱', title:'App UI Speed Design', brief:'Mobile pay screen for a wallet app — dark, premium, one screenshot.', entry:8, kind:'design'},
+  {id:'meme-mad', cat:'Poster', icon:'🐸', title:'Meme Maker Madness', brief:'Funniest original meme about "client asks for free revision #47".', entry:2, kind:'design'},
+  {id:'book-cover', cat:'Poster', icon:'📕', title:'Book Cover Challenge', brief:'Thriller cover: "THE LAST TRAIN TO NOWHERE". Moody, bold type.', entry:5, kind:'design'},
+  {id:'anime-face', cat:'AI Prompt', icon:'⛩️', title:'Anime Portrait Prompt', brief:'Best Stable Diffusion prompt: samurai girl, neon rain, ultra-detailed.', entry:3, kind:'prompt'},
+  {id:'estate-pro', cat:'Poster', icon:'🏠', title:'Real Estate Poster Pro', brief:'Luxury apartment poster — "SKYLINE HEIGHTS, Uttara". Clean + premium.', entry:7, kind:'design'},
+  {id:'food-menu', cat:'Poster', icon:'🍔', title:'Food Menu Design', brief:'Burger joint A5 flyer — "BUY 1 GET 1, Friday only". Mouth-watering.', entry:4, kind:'design'},
+  {id:'nft-arena', cat:'AI Prompt', icon:'💎', title:'NFT Art Arena', brief:'Best prompt for a 1/1 PFP collection piece — robot monk, gold, void bg.', entry:10, kind:'prompt'},
+  {id:'brand-slogan', cat:'Logo', icon:'📣', title:'Brand Name + Slogan', brief:'Name + slogan + mini-logo idea for an AI video-editing startup.', entry:3, kind:'prompt'},
+  {id:'hook-script', cat:'AI Prompt', icon:'🎬', title:'Short Video Hook Script', brief:'Best 3-second hook script for a money-saving TikTok. Under 30 words.', entry:2, kind:'prompt'},
+  {id:'fantasy-char', cat:'AI Prompt', icon:'🐉', title:'Fantasy Character Prompt', brief:'D&D boss prompt: lava golem king, epic lighting, full body.', entry:5, kind:'prompt'},
+  {id:'wedding-card', cat:'Poster', icon:'💒', title:'Wedding Card Elegance', brief:'Bengali-modern wedding card — "Rafi ❤ Nabila". Gold on maroon.', entry:6, kind:'design'},
+  {id:'saas-hero', cat:'UI', icon:'🚀', title:'SaaS Landing Hero', brief:'Hero section for "PromptArena" itself — headline, CTA, visual.', entry:9, kind:'design'},
+  {id:'hoodie-drop', cat:'T-Shirt', icon:'🧥', title:'Streetwear Hoodie Drop', brief:'Back-print hoodie art: "DHAKA NIGHTS" gothic + tiger.', entry:8, kind:'design'},
+];
+const NAMES = ['Rafi','Nusrat','Tanvir','Mim','Arif','Sadia','Fahim','Priya','Rakib','Anika','Siam','Tania','Hasan','Lamia','Nabil','Oishi','Kamal','Dina','Shuvo','Riya','Imran','Keya','Bijoy','Mou','Sakib','Jarin','Asif','Tuli'];
+const FAQS = [
+  ['Do I need to pay to enter?','Yes — strictly. Every room requires a paid entry ($2–$10) deducted from your wallet. Without payment you cannot join. Spectators may watch and vote for free but cannot win.'],
+  ['How are winners decided?','30-min submit phase → 10-min community + player vote → Top 3 by votes win. Ties break by earliest submission. Self-votes are blocked.'],
+  ['How is the prize split?','Prize pot = entry fee × 25 players. Arena takes 15% hosting fee. Remaining 85% splits 50% / 30% / 20% to 1st / 2nd / 3rd. Example: $5 room → $125 pot → $106.25 prizes → $53.13 / $31.88 / $21.25.'],
+  ['How do deposits & withdrawals work?','Deposit $5+ via card, bKash, Nagad, Rocket or USDT crypto. Withdraw min $10 to bKash / Nagad / bank / crypto within 24h. Demo build simulates this instantly; production connects Stripe + SSLCommerz + Firebase.'],
+  ['How do I sign in?','Gmail only — "Continue with Gmail" (Google Identity). One account per person. Duplicate accounts = ban + forfeited balance.'],
+  ['What gets me banned?','Stolen/AI-recycled-only work passed as original where original is required, vote manipulation, multiple accounts, chargeback fraud. No refund on bans.'],
+];
+
+let S = load() || seed();
+function seed(){
+  const now = Date.now();
+  const rooms = ROOMS_SEED.map((r,i)=>({
+    ...r,
+    max: 25,
+    joined: 8 + Math.floor(Math.random()*15),
+    endsAt: now + (4 + Math.floor(Math.random()*25))*60*1000,
+    phase: 'live',
+    entries: Array.from({length: 3+Math.floor(Math.random()*4)},(_,k)=>({
+      id: 'e_'+r.id+'_'+k, author: NAMES[Math.floor(Math.random()*NAMES.length)],
+      avatar: 'https://api.dicebear.com/7.x/thumbs/svg?seed='+encodeURIComponent(r.id+k),
+      text: r.kind==='prompt' ? samplePrompt(r.id) : '',
+      img: r.kind==='design' ? 'https://picsum.photos/seed/'+r.id+k+'/600/340' : '',
+      title: r.kind==='design' ? sampleTitle(r.id) : '',
+      votes: 2+Math.floor(Math.random()*22), mine:false, ts: now- Math.floor(Math.random()*20)*60000
+    })).sort((a,b)=>b.votes-a.votes)
+  }));
+  return { user:null, balance:0, earned:0, txns:[], joinedRooms:{}, myEntries:{}, myVotes:{}, rooms,
+    winners:[ {n:'Tanvir H.',r:'Viral Thumbnail Battle',amt:53.13},{n:'Mim Akter',r:'Logo Master Clash',amt:38.25},{n:'Sakib R.',r:'NFT Art Arena',amt:106.25},{n:'Priya S.',r:'T-Shirt Design Sprint',amt:63.75} ] };
+}
+function samplePrompt(id){ const m={'prompt-beast':'cyberpunk Dhaka street monsoon, neon reflections, rickshaw, cinematic lighting, ultra detailed --ar 16:9 --v 6','anime-face':'samurai girl neon rain tokyo alley, katana glow, ultra detailed anime key visual, dynamic pose --ar 3:4','nft-arena':'robot monk meditating in golden void, chrome + saffron robes, halo circuitry, 8k --ar 1:1','brand-slogan':'Name: CUTGLYPH — "Edit at the speed of thought." Mark: play-button chisel.','hook-script':'"Stop saving money. Start stacking systems — here are 3 that print."','fantasy-char':'lava golem king on obsidian throne, magma cracks, epic rim light, full body, dnd splash art'}; return m[id]||'Epic ultra-detailed prompt, cinematic light, 8k, award-winning composition --ar 16:9'; }
+function sampleTitle(id){ return {'thumb-viral':'BURIED ALIVE 😱 (50 Hours)','logo-clash':'KOFFIQLUB — cup mark','title-show':'I Saved $10K — How?','tee-sprint':'HUSTLE IN SILENCE','ui-speed':'PayDark — wallet UI','meme-mad':'Revision #47 💀','book-cover':'THE LAST TRAIN','estate-pro':'SKYLINE HEIGHTS','food-menu':'BOGO FRIDAY 🍔','wedding-card':'Rafi ❤ Nabila','saas-hero':'PromptArena Hero','hoodie-drop':'DHAKA NIGHTS'}[id]||'Battle entry'; }
+function load(){ try{ return JSON.parse(localStorage.getItem(LS)); }catch{ return null; } }
+function save(){ localStorage.setItem(LS, JSON.stringify(S)); }
+
+/* ── helpers ── */
+const $ = id => document.getElementById(id);
+const money = n => '$'+Number(n).toFixed(2);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, ok=true){ const d=document.createElement('div'); d.className='toast-in glass border '+(ok?'border-arena-green/40':'border-red-500/40')+' rounded-2xl p-3.5 text-sm shadow-2xl'; d.innerHTML=(ok?'✅ ':'⛔ ')+msg; $('toasts').appendChild(d); setTimeout(()=>{d.style.opacity='0';d.style.transition='.4s';setTimeout(()=>d.remove(),400)},3400); }
+function pot(room){ return room.entry*room.max; }
+function prizes(room){ const net=pot(room)*(1-FEE); return [net*.5, net*.3, net*.2]; }
+function timeLeft(room){ return Math.max(0, room.endsAt - Date.now()); }
+function fmt(ms){ const s=Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+/* ── auth ── */
+function renderAuth(){
+  const a=$('authArea');
+  if(S.user){
+    a.innerHTML = `<div class="flex items-center gap-2">
+      <img src="${S.user.avatar}" class="w-9 h-9 rounded-full border border-arena-line" />
+      <div class="hidden sm:block leading-tight"><div class="text-xs font-bold">${esc(S.user.name)}</div><div class="text-[10px] text-slate-500">${esc(S.user.email)}</div></div>
+      <button onclick="logout()" class="text-xs text-slate-400 hover:text-white border border-arena-line rounded-full px-3 py-1.5">Logout</button></div>`;
+    $('walletPill').classList.remove('hidden'); $('walletPill').classList.add('flex');
+  } else {
+    a.innerHTML = `<button onclick="openAuth()" class="bg-white text-black text-sm font-bold rounded-full px-5 py-2.5 hover:brightness-95">Sign in with Gmail</button>`;
+    $('walletPill').classList.add('hidden'); $('walletPill').classList.remove('flex');
+  }
+  $('balanceText').textContent = money(S.balance);
+}
+function openAuth(){ $('authModal').classList.remove('hidden'); $('authModal').classList.add('flex'); }
+function closeAuth(){ $('authModal').classList.add('hidden'); $('authModal').classList.remove('flex'); }
+function googleLogin(){
+  // PRODUCTION: replace with GIS credential callback → Firebase signInWithCredential.
+  // Demo: instant Gmail-style identity.
+  const email = ($('gmailInput').value.trim() || 'player'+Math.floor(Math.random()*900+100)+'@gmail.com').toLowerCase();
+  if(!email.endsWith('@gmail.com')){ toast('Please use a Gmail address (…@gmail.com).', false); return; }
+  const name = email.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  S.user = { name, email, avatar:'https://api.dicebear.com/7.x/personas/svg?seed='+encodeURIComponent(email) };
+  save(); renderAuth(); closeAuth(); renderMyBattles();
+  toast(`Welcome, <b>${esc(name)}</b>! Deposit to enter a battle.`);
+}
+function emailLogin(){ googleLogin(); }
+function logout(){ S.user=null; save(); renderAuth(); renderMyBattles(); toast('Signed out.'); }
+function requireAuth(){ if(!S.user){ openAuth(); toast('Sign in with Gmail first.', false); return false; } return true; }
+
+/* ── wallet ── */
+let wtab='deposit', depMethod='Card', wdMethod='bKash';
+function openWallet(){ if(!requireAuth()) return; walletTab(wtab); $('walletModal').classList.remove('hidden'); $('walletModal').classList.add('flex'); }
+function closeWallet(){ $('walletModal').classList.add('hidden'); $('walletModal').classList.remove('flex'); }
+function walletTab(t){ wtab=t;
+  for(const x of ['Deposit','Withdraw','History']){ $('tab'+x).className='rounded-xl py-2.5 text-sm font-bold '+((x.toLowerCase()===t)?'bg-arena-gold text-black':'bg-white/5 border border-arena-line text-slate-300'); }
+  $('walletBalance').textContent=money(S.balance); $('walletEarned').textContent=money(S.earned);
+  const c=$('walletContent');
+  if(t==='deposit'){
+    c.innerHTML = `
+    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Payment method</div>
+    <div class="grid grid-cols-5 gap-2 mb-4">${['Card','bKash','Nagad','Rocket','USDT'].map(m=>`<button onclick="depMethod='${m}';walletTab('deposit')" class="rounded-xl border text-xs font-bold py-2.5 ${depMethod===m?'border-arena-gold bg-arena-gold/10 text-arena-gold':'border-arena-line text-slate-300'}">${m==='Card'?'💳 Card':m==='USDT'?'₮ USDT':'📱 '+m}</button>`).join('')}</div>
+    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Amount (min $5)</div>
+    <div class="grid grid-cols-4 gap-2 mb-3">${[5,10,25,50].map(a=>`<button onclick="$('depAmt').value=${a}" class="rounded-xl border border-arena-line py-2.5 font-bold hover:border-arena-gold/60">$${a}</button>`).join('')}</div>
+    <input id="depAmt" type="number" min="5" value="10" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 font-bold mb-2" />
+    ${depMethod!=='Card'&&depMethod!=='USDT'?`<input id="depAcc" placeholder="Your ${depMethod} number (e.g. 01XXXXXXXXX)" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 text-sm mb-2" />`:depMethod==='USDT'?`<div class="text-xs text-slate-400 bg-black/30 border border-arena-line rounded-xl p-3 mb-2">Send USDT (BEP20) to: <b class="text-white select-all">0xArenaDemoPay123456789</b> — credit is automatic after 1 confirmation in production.</div>`:`<div class="text-xs text-slate-400 bg-black/30 border border-arena-line rounded-xl p-3 mb-2">🔒 Card secured by Stripe in production. Demo approves instantly.</div>`}
+    <button onclick="doDeposit()" class="w-full bg-arena-gold text-black font-extrabold rounded-xl py-3.5">Deposit Now</button>
+    <p class="text-[11px] text-slate-500 mt-2 text-center">Production: Stripe + SSLCommerz + bKash PGW webhooks credit the wallet server-side.</p>`;
+  } else if(t==='withdraw'){
+    c.innerHTML = `
+    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Withdraw to (min $10)</div>
+    <div class="grid grid-cols-4 gap-2 mb-3">${['bKash','Nagad','Bank','USDT'].map(m=>`<button onclick="wdMethod='${m}';walletTab('withdraw')" class="rounded-xl border text-xs font-bold py-2.5 ${wdMethod===m?'border-arena-green bg-arena-green/10 text-arena-green':'border-arena-line text-slate-300'}">${m}</button>`).join('')}</div>
+    <input id="wdAmt" type="number" min="10" placeholder="Amount" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 font-bold mb-2" />
+    <input id="wdAcc" placeholder="${wdMethod==='Bank'?'Bank account / IBAN':'Your '+wdMethod+' number / address'}" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 text-sm mb-3" />
+    <button onclick="doWithdraw()" class="w-full bg-arena-green text-black font-extrabold rounded-xl py-3.5">Request Withdrawal</button>
+    <p class="text-[11px] text-slate-500 mt-2 text-center">Withdrawals reviewed within 24h. Available: <b class="text-white">${money(S.balance)}</b></p>`;
+  } else {
+    c.innerHTML = S.txns.length ? `<div class="space-y-2 max-h-72 overflow-y-auto scroll-thin">`+[...S.txns].reverse().map(t=>`
+      <div class="flex items-center gap-3 bg-[#0A1122] border border-arena-line rounded-xl p-3 text-sm">
+        <div class="w-9 h-9 rounded-xl grid place-items-center font-bold ${t.amt>=0?'bg-arena-green/15 text-arena-green':'bg-red-500/15 text-red-400'}">${t.amt>=0?'+':'−'}</div>
+        <div class="flex-1"><b>${esc(t.label)}</b><div class="text-[11px] text-slate-500">${esc(t.detail||'')} • ${new Date(t.ts).toLocaleString()} • <span class="${t.status==='pending'?'text-amber-400':'text-arena-green'}">${t.status}</span></div></div>
+        <div class="font-bold ${t.amt>=0?'text-arena-green':'text-red-400'}">${t.amt>=0?'+':''}${money(t.amt)}</div>
+      </div>`).join('')+`</div>`
+    : `<div class="text-center text-slate-500 text-sm py-8">No transactions yet.<br>Deposit to enter your first battle.</div>`;
+  }
+}
+function addTxn(label, amt, detail, status='approved'){ S.txns.push({label, amt, detail, status, ts:Date.now()}); }
+function doDeposit(){
+  const amt = Number($('depAmt').value);
+  if(!(amt>=MIN_DEPOSIT)){ toast(`Minimum deposit is $${MIN_DEPOSIT}.`, false); return; }
+  const btn=event.target; btn.disabled=true; btn.textContent='Processing…';
+  setTimeout(()=>{
+    S.balance+=amt; addTxn('Deposit via '+depMethod, amt, depMethod); save();
+    renderAuth(); walletTab('deposit'); renderRooms();
+    toast(`<b>${money(amt)}</b> added via ${depMethod}. You can now enter battles!`);
+  }, 1200);
+}
+function doWithdraw(){
+  const amt=Number($('wdAmt').value), acc=$('wdAcc').value.trim();
+  if(!(amt>=MIN_WITHDRAW)){ toast(`Minimum withdrawal is $${MIN_WITHDRAW}.`, false); return; }
+  if(amt>S.balance){ toast('Insufficient balance. Win battles or deposit first.', false); return; }
+  if(!acc){ toast('Enter your receiving account/number.', false); return; }
+  S.balance-=amt; addTxn('Withdrawal to '+wdMethod, -amt, acc, 'pending'); save();
+  renderAuth(); walletTab('history');
+  toast(`Withdrawal of <b>${money(amt)}</b> requested. Arrives within 24h.`);
+  setTimeout(()=>{ const t=[...S.txns].reverse().find(x=>x.status==='pending'); if(t){t.status='approved'; save();} }, 8000);
+}
+
+/* ── rooms ── */
+let filter='All';
+function renderFilters(){
+  $('filters').innerHTML = CATS.map(c=>`<button onclick="filter='${c}';renderRooms()" class="text-xs font-bold rounded-full px-4 py-2 border whitespace-nowrap ${filter===c?'bg-arena-gold text-black border-arena-gold':'border-arena-line text-slate-300 hover:border-white/30'}">${c}</button>`).join('');
+}
+function roomStatus(r){
+  const left=timeLeft(r);
+  if(r.phase==='voting') return {tag:'VOTING', cls:'bg-purple-500/15 text-purple-300 border-purple-500/30'};
+  if(left<=0) return {tag:'ENDED', cls:'bg-white/5 text-slate-400 border-arena-line'};
+  return {tag:'LIVE', cls:'bg-red-500/15 text-red-400 border-red-500/30'};
+}
+function renderRooms(){
+  renderFilters();
+  const list = S.rooms.filter(r=>filter==='All'||r.cat===filter);
+  $('roomCount').textContent = `• ${list.length} rooms • 25 players each`;
+  $('roomGrid').innerHTML = list.map(r=>{
+    const [p1,p2,p3]=prizes(r), st=roomStatus(r), left=timeLeft(r);
+    const joined = S.joinedRooms[r.id] ? r.joined : r.joined;
+    const pct = Math.min(100, joined/r.max*100);
+    return `<div class="bg-arena-card border border-arena-line rounded-3xl p-5 card-hover flex flex-col">
+      <div class="flex items-start justify-between mb-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/10 to-white/0 border border-arena-line grid place-items-center text-2xl">${r.icon}</div>
+        <span class="text-[11px] font-bold border rounded-full px-2.5 py-1 ${st.cls}">${st.tag==='LIVE'?'<span class="live-dot inline-block w-1.5 h-1.5 rounded-full bg-red-500 mr-1"></span>● ':''}${st.tag} ${st.tag==='LIVE'?fmt(left):''}</span>
+      </div>
+      <div class="text-[11px] font-bold text-arena-gold uppercase tracking-wider">${r.cat} • ${r.kind==='prompt'?'✍️ Prompt':'🎨 Design'}</div>
+      <h3 class="font-display font-bold text-lg leading-tight mt-0.5">${esc(r.title)}</h3>
+      <p class="text-xs text-slate-400 line-clamp-2 mt-1 mb-3">${esc(r.brief)}</p>
+      <div class="flex items-center gap-2 text-xs mb-2"><span class="font-bold">${joined}/${r.max} fighters</span><div class="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-400 to-orange-500 timer-bar" style="width:${pct}%"></div></div></div>
+      <div class="grid grid-cols-3 gap-2 text-center mb-4">
+        <div class="bg-black/30 border border-arena-line rounded-xl py-2"><div class="text-[10px] text-slate-500">ENTRY</div><div class="font-black text-arena-gold">${money(r.entry)}</div></div>
+        <div class="bg-black/30 border border-arena-line rounded-xl py-2"><div class="text-[10px] text-slate-500">PRIZE POT</div><div class="font-black">${money(pot(r))}</div></div>
+        <div class="bg-black/30 border border-arena-line rounded-xl py-2"><div class="text-[10px] text-slate-500">1ST WINS</div><div class="font-black text-arena-green">${money(p1)}</div></div>
+      </div>
+      <div class="flex gap-2 mt-auto">
+        <button onclick="openRoom('${r.id}')" class="flex-1 border border-arena-line rounded-xl py-2.5 text-sm font-bold hover:border-white/30">View Battle</button>
+        ${S.joinedRooms[r.id]
+          ? `<button onclick="openRoom('${r.id}')" class="flex-1 bg-arena-green text-black rounded-xl py-2.5 text-sm font-extrabold">⚔️ Enter Arena</button>`
+          : `<button onclick="joinRoom('${r.id}')" class="flex-1 bg-arena-gold text-black rounded-xl py-2.5 text-sm font-extrabold">Join — ${money(r.entry)}</button>`}
+      </div>
+      ${!S.joinedRooms[r.id]?`<div class="text-[10px] text-slate-500 text-center mt-1.5">🔒 Paid entry only — no pay, no entry</div>`:''}
+    </div>`;
+  }).join('');
+  // hero stats
+  const totalPot = S.rooms.reduce((a,r)=>a+pot(r),0);
+  const players = S.rooms.reduce((a,r)=>a+r.joined,0);
+  $('statPot').textContent = '$'+totalPot.toLocaleString();
+  $('statPlayers').textContent = players;
+  $('statPaid').textContent = '$4,820';
+}
+
+/* ── join (STRICT: auth + pay, no free entry) ── */
+function joinRoom(id){
+  const r = S.rooms.find(x=>x.id===id);
+  if(!requireAuth()) return;
+  if(S.joinedRooms[id]){ openRoom(id); return; }
+  if(timeLeft(r)<=0 || r.phase!=='live'){ toast('This battle already closed.', false); return; }
+  if(r.joined>=r.max){ toast('Room is full (25/25). Pick another room.', false); return; }
+  if(S.balance < r.entry){
+    toast(`Insufficient balance. Entry is <b>${money(r.entry)}</b> — please deposit first.`, false);
+    openWallet(); return;
+  }
+  // charge wallet — this is the paywall: no payment => no entry, enforced server-side in production
+  S.balance -= r.entry;
+  r.joined += 1;
+  S.joinedRooms[id] = { paid: r.entry, at: Date.now() };
+  addTxn('Battle entry: '+r.title, -r.entry, 'Seat locked • 25 max');
+  save(); renderAuth(); renderRooms(); renderMyBattles();
+  toast(`Seat locked in <b>${esc(r.title)}</b>! Submit before the timer ends.`);
+  openRoom(id);
+}
+
+/* ── room modal ── */
+let activeRoom=null, submitMode='prompt';
+function openRoom(id){
+  activeRoom=id;
+  renderRoomModal();
+  $('roomModal').classList.remove('hidden'); $('roomModal').classList.add('flex');
+}
+function closeRoom(){ $('roomModal').classList.add('hidden'); $('roomModal').classList.remove('flex'); activeRoom=null; }
+function renderRoomModal(){
+  const r = S.rooms.find(x=>x.id===activeRoom); if(!r) return;
+  const [p1,p2,p3]=prizes(r), st=roomStatus(r), left=timeLeft(r);
+  const joined = !!S.joinedRooms[r.id];
+  const myEntry = S.myEntries[r.id];
+  const entries=[...(myEntry?[myEntry]:[]), ...r.entries].sort((a,b)=>b.votes-a.votes);
+  $('roomModalBody').innerHTML = `
+  <div class="p-6 md:p-7">
+    <div class="flex items-start gap-4 mb-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/0 border border-arena-line grid place-items-center text-3xl shrink-0">${r.icon}</div>
+      <div class="flex-1">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-[11px] font-bold border rounded-full px-2.5 py-1 ${st.cls}">${st.tag} ${st.tag==='LIVE'?'• '+fmt(left):''}</span>
+          <span class="text-[11px] text-slate-400 font-bold">${r.joined}/${r.max} fighters • Entry ${money(r.entry)}</span>
+        </div>
+        <h2 class="font-display font-black text-2xl mt-1">${esc(r.title)}</h2>
+        <p class="text-sm text-slate-400 mt-1">${esc(r.brief)}</p>
+      </div>
+      <button onclick="closeRoom()" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 font-bold shrink-0">✕</button>
+    </div>
+    <div class="grid grid-cols-4 gap-2 mb-5 text-center">
+      <div class="bg-black/30 border border-arena-gold/40 rounded-2xl p-3"><div class="text-[10px] text-slate-500 font-bold">🥇 1ST</div><div class="font-black text-arena-gold">${money(p1)}</div></div>
+      <div class="bg-black/30 border border-arena-line rounded-2xl p-3"><div class="text-[10px] text-slate-500 font-bold">🥈 2ND</div><div class="font-black">${money(p2)}</div></div>
+      <div class="bg-black/30 border border-arena-line rounded-2xl p-3"><div class="text-[10px] text-slate-500 font-bold">🥉 3RD</div><div class="font-black">${money(p3)}</div></div>
+      <div class="bg-black/30 border border-arena-line rounded-2xl p-3"><div class="text-[10px] text-slate-500 font-bold">⏱️ LEFT</div><div class="font-black" id="modalTimer">${st.tag==='LIVE'?fmt(left):st.tag}</div></div>
+    </div>
+    ${!joined?`
+    <div class="bg-gradient-to-r from-amber-500/15 to-orange-500/10 border border-arena-gold/40 rounded-2xl p-4 mb-5 flex flex-wrap items-center gap-3">
+      <div class="flex-1 min-w-[200px]"><b>🔒 Paid entry required.</b><div class="text-xs text-slate-400">Pay <b class="text-white">${money(r.entry)}</b> from your wallet to submit & win. Balance: <b class="text-white" id="modalBal">${money(S.balance)}</b></div></div>
+      <button onclick="joinRoom('${r.id}')" class="bg-arena-gold text-black font-extrabold rounded-xl px-6 py-3">Pay & Join — ${money(r.entry)}</button>
+    </div>`:`
+    <div class="bg-arena-green/10 border border-arena-green/30 rounded-2xl p-4 mb-5">
+      <b class="text-arena-green">✅ You're in! Entry paid (${money(S.joinedRooms[r.id].paid)}).</b>
+      ${myEntry?`<div class="text-xs text-slate-400 mt-1">Your submission is live below. Share the room to earn votes — winners split <b class="text-white">${money(p1+p2+p3)}</b>.</div>`:`
+      <div class="mt-3">
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Submit your entry (before timer ends)</div>
+        ${r.kind==='prompt'
+          ?`<textarea id="subText" rows="3" placeholder="Paste your winning prompt here…" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 text-sm"></textarea>`
+          :`<input id="subTitle" placeholder="Entry title (e.g. BURIED ALIVE 😱)" class="w-full bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 text-sm mb-2" />
+            <div class="flex gap-2"><input id="subImg" placeholder="Image URL (or upload below)" class="flex-1 bg-[#0A1122] border border-arena-line rounded-xl px-4 py-3 text-sm" />
+            <label class="cursor-pointer bg-white/5 border border-arena-line rounded-xl px-4 py-3 text-sm font-bold hover:border-arena-gold/60">📤 Upload<input id="subFile" type="file" accept="image/*" class="hidden" onchange="previewUpload(this)" /></label></div>
+            <img id="subPreview" class="hidden mt-2 rounded-xl max-h-40 border border-arena-line" />`}
+        <button onclick="submitEntry('${r.id}')" class="mt-2 w-full bg-arena-gold text-black font-extrabold rounded-xl py-3">🚀 Submit Entry</button>
+      </div>`}
+    </div>`}
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="font-display font-bold">⚔️ Live Entries (${entries.length}) <span class="text-xs font-sans text-slate-500 font-medium">— vote for the best (not your own)</span></h3>
+    </div>
+    <div class="space-y-2.5" id="entryList">
+      ${entries.map((e,i)=>`
+      <div class="bg-[#0A1122] border ${e.mine?'border-arena-gold/60':'border-arena-line'} rounded-2xl p-3.5 flex gap-3">
+        <img src="${e.avatar}" class="w-10 h-10 rounded-full border border-arena-line shrink-0" />
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <b class="text-sm">${esc(e.author)} ${e.mine?'<span class="text-[10px] bg-arena-gold text-black rounded-full px-2 py-0.5 font-bold">YOU</span>':''}</b>
+            ${i===0?'<span class="text-[10px] font-bold">🥇</span>':i===1?'<span class="text-[10px] font-bold">🥈</span>':i===2?'<span class="text-[10px] font-bold">🥉</span>':''}
+            <span class="text-[11px] text-slate-500">❤ ${e.votes} votes</span>
+          </div>
+          ${e.title?`<div class="text-sm font-bold mt-0.5">${esc(e.title)}</div>`:''}
+          ${e.text?`<div class="text-xs text-slate-300 bg-black/40 border border-arena-line rounded-xl p-2.5 mt-1.5 font-mono">${esc(e.text)}</div>`:''}
+          ${e.img?`<img src="${esc(e.img)}" loading="lazy" class="rounded-xl mt-2 max-h-52 border border-arena-line" onerror="this.style.display='none'" />`:''}
+        </div>
+        <button onclick="vote('${r.id}','${e.id}')" ${e.mine?'disabled':''} class="vote-btn shrink-0 h-fit text-xs font-bold border border-arena-line rounded-full px-3.5 py-2 hover:border-arena-gold ${S.myVotes[r.id]===e.id?'voted':''} ${e.mine?'opacity-30 cursor-not-allowed':''}">${S.myVotes[r.id]===e.id?'❤ Voted':'🤍 Vote'}</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+function previewUpload(input){
+  const f=input.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=e=>{ $('subPreview').src=e.target.result; $('subPreview').classList.remove('hidden'); $('subImg').value=e.target.result; };
+  rd.readAsDataURL(f);
+}
+function submitEntry(roomId){
+  const r=S.rooms.find(x=>x.id===roomId);
+  if(!S.joinedRooms[roomId]){ toast('Pay the entry fee first — no pay, no entry.', false); return; }
+  if(timeLeft(r)<=0){ toast('Time is up for this battle.', false); return; }
+  let e;
+  if(r.kind==='prompt'){
+    const t=$('subText').value.trim();
+    if(t.length<10){ toast('Prompt too short — write your best prompt (10+ chars).', false); return; }
+    e={id:'e_mine_'+Date.now(), author:S.user.name, avatar:S.user.avatar, text:t, img:'', title:'', votes:0, mine:true, ts:Date.now()};
+  } else {
+    const title=$('subTitle').value.trim(), img=$('subImg').value.trim();
+    if(!title||!img){ toast('Add a title + image URL or upload.', false); return; }
+    e={id:'e_mine_'+Date.now(), author:S.user.name, avatar:S.user.avatar, text:'', img, title, votes:0, mine:true, ts:Date.now()};
+  }
+  S.myEntries[roomId]=e; save(); renderRoomModal(); renderMyBattles();
+  toast('Entry submitted! Get votes to finish Top 3 💰');
+  // simulate incoming rival votes for realism
+  r.entries.forEach(x=>{ if(Math.random()<.5) x.votes+=1; });
+  save();
+}
+function vote(roomId, entryId){
+  if(!requireAuth()) return;
+  const r=S.rooms.find(x=>x.id===roomId);
+  const mine=S.myEntries[roomId];
+  if(mine && entryId===mine.id){ toast('You cannot vote for yourself.', false); return; }
+  if(S.myVotes[roomId]){ toast('You already voted in this room (1 vote each).', false); return; }
+  const target = (mine&&false)||null;
+  let e = (mine&&mine.id===entryId)?mine:r.entries.find(x=>x.id===entryId);
+  if(!e) return;
+  e.votes+=1; S.myVotes[roomId]=entryId; save(); renderRoomModal();
+  toast('Vote counted! ❤');
+}
+
+/* ── my battles + winners ── */
+function renderMyBattles(){
+  const box=$('myBattles');
+  const ids=Object.keys(S.joinedRooms);
+  if(!S.user){ box.innerHTML=`<div class="text-center py-6"><div class="text-3xl mb-2">🔐</div><div class="text-sm text-slate-400 mb-3">Sign in with Gmail to track battles & earnings.</div><button onclick="openAuth()" class="bg-white text-black text-sm font-bold rounded-xl px-5 py-2.5">Sign in with Gmail</button></div>`; return; }
+  if(!ids.length){ box.innerHTML=`<div class="text-center text-sm text-slate-500 py-6">No battles yet.<br><a href="#rooms" class="text-arena-gold font-bold underline">Join a $2–$10 room</a> to start earning.</div>`; return; }
+  box.innerHTML = ids.map(id=>{
+    const r=S.rooms.find(x=>x.id===id); if(!r) return '';
+    const e=S.myEntries[id];
+    return `<div class="bg-[#0A1122] border border-arena-line rounded-2xl p-3.5 flex items-center gap-3">
+      <div class="text-2xl">${r.icon}</div>
+      <div class="flex-1 min-w-0"><b class="text-sm">${esc(r.title)}</b>
+        <div class="text-[11px] text-slate-500">Paid ${money(S.joinedRooms[id].paid)} • ${e?`❤ ${e.votes} votes on your entry`:'No submission yet — hurry!'} • Pot ${money(pot(r))}</div></div>
+      <button onclick="openRoom('${id}')" class="text-xs font-bold bg-white/5 border border-arena-line rounded-full px-4 py-2 hover:border-arena-gold/60">Open →</button>
+    </div>`;
+  }).join('');
+}
+function renderWinners(){
+  $('winnerFeed').innerHTML = S.winners.map(w=>`
+    <div class="bg-[#0A1122] border border-arena-line rounded-2xl p-3.5 flex items-center gap-3">
+      <img src="https://api.dicebear.com/7.x/personas/svg?seed=${encodeURIComponent(w.n)}" class="w-9 h-9 rounded-full border border-arena-line" />
+      <div class="flex-1"><b class="text-sm">${esc(w.n)}</b><div class="text-[11px] text-slate-500">won ${esc(w.r)}</div></div>
+      <div class="font-black text-arena-green">+${money(w.amt)}</div>
+    </div>`).join('');
+}
+function renderFaq(){
+  $('faqGrid').innerHTML = FAQS.map(f=>`<div class="bg-black/30 border border-arena-line rounded-2xl p-4"><b>${f[0]}</b><div class="text-slate-400 mt-1">${f[1]}</div></div>`).join('');
+}
+
+/* ── timers: rotate rooms, settle winners ── */
+function tick(){
+  let changed=false;
+  S.rooms.forEach(r=>{
+    if(r.phase==='live' && timeLeft(r)<=0){
+      // settle: top-3 by votes
+      const all=[...(S.myEntries[r.id]?[S.myEntries[r.id]]:[]), ...r.entries].sort((a,b)=>b.votes-a.votes);
+      const [p1,p2,p3]=prizes(r);
+      const payouts=[p1,p2,p3];
+      all.slice(0,3).forEach((w,i)=>{
+        const label=`${i+1}${i===0?'st':i===1?'nd':'rd'} place: ${r.title}`;
+        if(w.mine){ S.balance+=payouts[i]; S.earned+=payouts[i]; addTxn(label, payouts[i], 'Winner payout — auto-credited'); toast(`🏆 You placed #${i+1} in <b>${esc(r.title)}</b> — <b>${money(payouts[i])}</b> credited!`); }
+        S.winners.unshift({n:w.author, r:r.title, amt:Math.round(payouts[i]*100)/100});
+      });
+      S.winners=S.winners.slice(0,8);
+      // reset room for next round
+      r.endsAt=Date.now()+30*60*1000; r.joined=8+Math.floor(Math.random()*12); r.phase='live';
+      delete S.joinedRooms[r.id]; delete S.myEntries[r.id]; delete S.myVotes[r.id];
+      r.entries = Array.from({length:4},(_,k)=>({id:'e_'+r.id+'_'+Date.now()+k, author:NAMES[Math.floor(Math.random()*NAMES.length)], avatar:'https://api.dicebear.com/7.x/thumbs/svg?seed='+r.id+Date.now()+k, text:r.kind==='prompt'?samplePrompt(r.id):'', img:r.kind==='design'?'https://picsum.photos/seed/'+r.id+Date.now()+k+'/600/340':'', title:r.kind==='design'?sampleTitle(r.id):'', votes:2+Math.floor(Math.random()*14), mine:false, ts:Date.now()}));
+      changed=true;
+    }
+  });
+  if(changed){ save(); renderAuth(); renderRooms(); renderMyBattles(); renderWinners(); if(activeRoom) renderRoomModal(); }
+  // live countdown repaint (cheap)
+  S.rooms.forEach(r=>{});
+  renderRooms._t = (renderRooms._t||0)+1;
+  if(renderRooms._t%5===0 && !document.hidden){ renderRooms(); if(activeRoom){ const mt=$('modalTimer'); if(mt){ const r=S.rooms.find(x=>x.id===activeRoom); if(r) mt.textContent=fmt(timeLeft(r)); } } }
+}
+
+/* ── boot ── */
+renderAuth(); renderRooms(); renderMyBattles(); renderWinners(); renderFaq();
+setInterval(tick, 1000);
+$('roomModal').addEventListener('click', e=>{ if(e.target.id==='roomModal') closeRoom(); });
+$('walletModal').addEventListener('click', e=>{ if(e.target.id==='walletModal') closeWallet(); });
+$('authModal').addEventListener('click', e=>{ if(e.target.id==='authModal') closeAuth(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeRoom(); closeWallet(); closeAuth(); } });
+</script>
+</body>
+</html>
